@@ -1,3 +1,19 @@
+"""
+
+    REQUIREMENTS:
+
+        extract RAIL blocks (https://github.com/arpruss/raspberryjammod/blob/master/mcpipy/mcpi/block.py)
+
+
+    TODO:
+
+        try already powered tracks:
+
+            https://minecraft.gamepedia.com/Powered_Rail#Data_values
+
+
+"""
+
 import mcpi.minecraft as minecraft
 import mcpi.block as block
 import time
