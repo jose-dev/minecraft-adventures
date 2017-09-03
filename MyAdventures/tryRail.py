@@ -109,6 +109,7 @@ z += 1
 
 """
 
+
 #
 # this works to build a spirally rail track
 #
@@ -147,6 +148,8 @@ for n in range(0, 4):
         x -= 1
     x += 1
 
+    add_red_stone = False
+    isFirst = True
     for dz in range(0, STEPS):
         mc.postToChat("adding track {}".format(str(dx)))
         time.sleep(.5)
@@ -156,10 +159,18 @@ for n in range(0, 4):
             y += 1
             id = block.RAIL_GOLDEN.id
             data = block.RAIL_GOLDEN.data
+            if isFirst:
+                add_red_stone = True
+                isFirst = False
+            else:
+                add_red_stone = False
 
         mc.setBlock(x, y - 1, z, block.BEDROCK.id, block.BEDROCK.data)
         mc.setBlock(x, y, z, id, data)
+        if add_red_stone:
+            mc.setBlock(x + 1, y - 1, z, block.BEDROCK.id, block.BEDROCK.data)
+            mc.setBlock(x + 1, y, z, block.REDSTONE_TORCH_ACTIVE.id, block.REDSTONE_TORCH_ACTIVE.data)
         z -= 1
-    z += 1
 
+z += 1
 
