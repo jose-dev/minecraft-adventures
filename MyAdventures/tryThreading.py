@@ -14,11 +14,19 @@ import random
 
 def boom(mc, event_countdown, event_foundall, bombs=10, delay=1):
     name = threading.currentThread().getName()
-    event_countdown.wait()
-    if not event_foundall.wait(1):
-        for i in range(0, bombs):
-            mc.postToChat("({0}) BOOM!!!".format(name))
-            time.sleep(delay)
+    #event_countdown.wait()
+    finished_countdown = False
+    found_all = False
+    while not found_all and not finished_countdown:
+        finished_countdown = event_countdown.wait(1)
+        found_all = event_foundall.wait(1)
+        if found_all:
+            mc.postToChat("({0}) Bombs defused".format(name))
+            break
+        if finished_countdown:
+            for i in range(0, bombs):
+                mc.postToChat("({0}) BOOM!!!".format(name))
+                time.sleep(delay)
     mc.postToChat("({0}) bye".format(name))
 
 
