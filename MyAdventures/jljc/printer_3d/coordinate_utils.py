@@ -1,5 +1,6 @@
 from mcpi.vec3 import Vec3
 import copy
+import json
 
 
 
@@ -57,17 +58,30 @@ class CoordinateUtils(object):
         return out
 
 
-
-"""
-    TODO
-    -------
-
-
-    * mirrored_data = mirror_data(data, coord='x')
-
-        mirror data according to algorithm described in notepad.
+    @staticmethod
+    def read_data_from_file(filein):
+        with open(filein) as json_data:
+            out = json.load(json_data)
+        return out
 
 
-"""
+    @staticmethod
+    def save_data_to_file(data, fileout):
+        with open(fileout, 'w') as json_file:
+            json.dump(data, json_file)
+
+
+
+    """
+        TODO
+        -------
+
+
+        * mirrored_data = mirror_data(data, coord='x')
+
+            mirror data according to algorithm described in notepad.
+
+
+    """
 
 
