@@ -5,7 +5,7 @@ echo "  Note - make sure Minecraft is using 1.6.4"
 
 
 SERVERFILE="server.properties"
-WORLDS=("test_world" "flat_world" "water_world")
+WORLDS=("test_world" "flat_world" "water_world" "cfc_world")
 cd "$( dirname "$0" )"
 
 
