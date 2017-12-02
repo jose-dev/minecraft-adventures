@@ -20,12 +20,12 @@ class CoordinateUtils(object):
 
 
     @staticmethod
-    def data_to_relative_coordinates(data):
+    def calculate_relative_coordinates(data):
         min = data['box']['min']
 
         out = copy.deepcopy(data)
 
-        # recalculate box coordnantes
+        # recalculate box coordinates
         for t in ['min', 'max']:
             for coord in min:
                 out['box'][t][coord] -= min[coord]
@@ -34,6 +34,25 @@ class CoordinateUtils(object):
         for i in range(0, len(data['data'])):
             for coord in min:
                 out['data'][i]['coord'][coord] -= min[coord]
+
+        return out
+
+
+    @staticmethod
+    def shift_coordinates(data, new_min=None):
+        min = {'x': new_min.x, 'y': new_min.y, 'z': new_min.z}
+
+        out = copy.deepcopy(data)
+
+        # recalculate box coordinates
+        for t in ['min', 'max']:
+            for coord in min:
+                out['box'][t][coord] += min[coord]
+
+        # recalculate block coordinates
+        for i in range(0, len(data['data'])):
+            for coord in min:
+                out['data'][i]['coord'][coord] += min[coord]
 
         return out
 
@@ -47,13 +66,6 @@ class CoordinateUtils(object):
     * mirrored_data = mirror_data(data, coord='x')
 
         mirror data according to algorithm described in notepad.
-
-
-
-    * data = calculate_coord_to_print3d(template, coord=Ve3(start_coords))
-
-        calculate coordinates for building based on template and
-        starting coordinated
 
 
 """

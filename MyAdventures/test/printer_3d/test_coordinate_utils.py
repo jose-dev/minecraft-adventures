@@ -1,7 +1,8 @@
 from jljc.printer_3d.coordinate_utils import CoordinateUtils
 import unittest
-from mcpi.vec3 import Vec3
+import copy
 
+from mcpi.vec3 import Vec3
 
 
 
@@ -20,17 +21,34 @@ class TestCoordinateUtils(unittest.TestCase):
         self.assertEquals(result[1].z, 50)
 
 
-    def test_data_to_relative_coordinates(self):
+    def test_calculate_relative_coordinates(self):
         datain = {'box': {'min': {'x': 10, 'y': 15, 'z': 20}, 'max': {'x': 20, 'y': 25, 'z': 30}},
                   'data':[{'coord': {'x': 10, 'y': 15, 'z': 20}, 'block': {'id': 1, 'data': 0}},
                           {'coord': {'x': 20, 'y': 25, 'z': 30}, 'block': {'id': 1, 'data': 0}}]}
         expected = {'box': {'min': {'x': 0, 'y': 0, 'z': 0}, 'max': {'x': 10, 'y': 10, 'z': 10}},
                     'data':[{'coord': {'x': 0, 'y': 0, 'z': 0}, 'block': {'id': 1, 'data': 0}},
                             {'coord': {'x': 10, 'y': 10, 'z': 10}, 'block': {'id': 1, 'data': 0}}]}
+        saved = copy.deepcopy(datain)
 
-        result = CoordinateUtils.data_to_relative_coordinates(datain)
+        result = CoordinateUtils.calculate_relative_coordinates(datain)
 
         self.assertDictEqual(result, expected)
+        self.assertDictEqual(saved, datain)
+
+
+    def test_shift_coordinates(self):
+        datain = {'box': {'min': {'x': 0, 'y': 0, 'z': 0}, 'max': {'x': 10, 'y': 10, 'z': 10}},
+                  'data':[{'coord': {'x': 0, 'y': 0, 'z': 0}, 'block': {'id': 1, 'data': 0}},
+                          {'coord': {'x': 10, 'y': 10, 'z': 10}, 'block': {'id': 1, 'data': 0}}]}
+        expected = {'box': {'min': {'x': 10, 'y': 15, 'z': 20}, 'max': {'x': 20, 'y': 25, 'z': 30}},
+                    'data':[{'coord': {'x': 10, 'y': 15, 'z': 20}, 'block': {'id': 1, 'data': 0}},
+                            {'coord': {'x': 20, 'y': 25, 'z': 30}, 'block': {'id': 1, 'data': 0}}]}
+        saved = copy.deepcopy(datain)
+
+        result = CoordinateUtils.shift_coordinates(datain, Vec3(10, 15, 20))
+
+        self.assertDictEqual(result, expected)
+        self.assertDictEqual(saved, datain)
 
 
 
