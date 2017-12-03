@@ -36,7 +36,7 @@ if __name__ == "__main__":
     #v2 = Vec3(133, 31, -348)
     ##mc.player.setPos(v1.x, v1.y, v1.z)
 
-    ### scam tree
+    ### scan tree
     #data = scanner.scan_3d(v1, v2)
     #data = CoordinateUtils.calculate_relative_coordinates(data)
     #CoordinateUtils.save_data_to_file(data, DATA_FILE)
@@ -53,6 +53,7 @@ if __name__ == "__main__":
     ## plant forest
     gap_x = -20
     orig_data = CoordinateUtils.read_data_from_file(DATA_FILE)
+    gap_x += -1 * (orig_data['box']['max']['z'] - orig_data['box']['min']['z'])
     for i in range(0, 5):
         data = CoordinateUtils.shift_coordinates(orig_data, v)
         scanner.print_3d(data)

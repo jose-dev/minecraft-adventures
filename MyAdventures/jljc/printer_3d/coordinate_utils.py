@@ -73,13 +73,26 @@ class CoordinateUtils(object):
 
 
     """
+
+
         TODO
         -------
 
 
-        * mirrored_data = mirror_data(data, coord='x')
+        * mirrored_data = mirror_data(data, axis='x')
 
             mirror data according to algorithm described in notepad.
+
+            allow different axis!!
+
+
+        * rotated_date = rotate_data(data, axis='x', angle=90)
+
+            rotate data (only in multiple of 90?).
+
+            allow different axis!!
+
+
 
 
     """
