@@ -4,7 +4,7 @@ import mcpi.minecraft as minecraft
 import mcpi.block as block
 from mcpi.vec3 import Vec3
 
-from jljc.build.spaceship import Spaceship
+from jljc.builder.spaceship import Spaceship
 from jljc.printer_3d.coordinate_utils import CoordinateUtils
 from jljc.printer_3d.scan_print_3d import ScanPrint3D
 
