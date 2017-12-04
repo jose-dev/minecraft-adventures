@@ -4,79 +4,11 @@ import mcpi.minecraft as minecraft
 import mcpi.block as block
 from mcpi.vec3 import Vec3
 
+from jljc.build.spaceship import Spaceship
 from jljc.printer_3d.coordinate_utils import CoordinateUtils
 from jljc.printer_3d.scan_print_3d import ScanPrint3D
 
-
 DATA_FILE = 'space_ship_001.json'
-SPACE_SHIP = [
-    [
-        [0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,1,1,1,0,0,0,0],
-        [0,0,0,1,0,0,0,1,0,0,0],
-        [0,0,0,1,0,0,0,1,0,0,0],
-        [0,0,0,1,0,0,0,1,0,0,0],
-        [0,0,0,0,1,1,1,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0]
-    ],
-    [
-        [0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,1,1,1,1,1,0,0,0],
-        [0,0,1,1,0,0,0,1,1,0,0],
-        [0,0,1,0,0,0,0,0,1,0,0],
-        [0,0,1,0,0,0,0,0,1,0,0],
-        [0,0,1,0,0,0,0,0,1,0,0],
-        [0,0,1,1,0,0,0,1,1,0,0],
-        [0,0,0,1,1,1,1,1,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0]
-    ],
-    [
-        [0,0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,1,1,1,1,1,0,0,0],
-        [0,0,1,0,0,0,0,0,1,0,0],
-        [0,1,0,0,0,0,0,0,0,1,0],
-        [0,1,0,0,0,0,0,0,0,1,0],
-        [0,1,0,0,0,0,0,0,0,1,0],
-        [0,1,0,0,0,0,0,0,0,1,0],
-        [0,1,0,0,0,0,0,0,0,1,0],
-        [0,0,1,0,0,0,0,0,1,0,0],
-        [0,0,0,1,1,1,1,1,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0]
-    ],
-    [
-        [0,0,0,0,1,1,1,0,0,0,0],
-        [0,0,1,1,0,0,0,1,1,0,0],
-        [0,1,0,0,0,0,0,0,0,1,0],
-        [0,1,0,0,0,0,0,0,0,1,0],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [0,1,0,0,0,0,0,0,0,1,0],
-        [0,1,0,0,0,0,0,0,0,1,0],
-        [0,0,1,1,0,0,0,1,1,0,0],
-        [0,0,0,0,1,1,1,0,0,0,0]
-    ],
-    [
-        [0,0,0,1,1,1,1,1,0,0,0],
-        [0,0,1,0,0,0,0,0,1,0,0],
-        [0,1,0,0,0,0,0,0,0,1,0],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [0,1,0,0,0,0,0,0,0,1,0],
-        [0,0,1,0,0,0,0,0,1,0,0],
-        [0,0,0,1,1,1,1,1,0,0,0]
-    ]
-]
-
 
 mc = minecraft.Minecraft.create()
 scanner = ScanPrint3D(mc)
@@ -99,80 +31,15 @@ if __name__ == "__main__":
 
 
     ## starting coordiantes
-    Xo = 112
-    Yo= 20
+    Xo = 82
+    Yo= 40
     Zo = -234
 
-    ## build spaceship
-    z = Zo
-    for layer in SPACE_SHIP:
-        for i in range(0, len(layer)):
-            y = Yo + i
-            for j in range(0, len(layer[i])):
-                x = Xo + j
-                b = block.IRON_BLOCK if layer[i][j] == 1 else block.AIR
-                mc.setBlock(x, y, z, b.id, b.data)
-        z -= 1
 
-    for n in range(0, 2):
-        layer = SPACE_SHIP[-1]
-        for i in range(0, len(layer)):
-            y = Yo + i
-            for j in range(0, len(layer[i])):
-                x = Xo + j
-                b = block.IRON_BLOCK if layer[i][j] == 1 else block.AIR
-                mc.setBlock(x, y, z, b.id, b.data)
-        z -= 1
-
-    for n in reversed(range(0, len(SPACE_SHIP))):
-        layer = SPACE_SHIP[n]
-        for i in range(0, len(layer)):
-            y = Yo + i
-            for j in range(0, len(layer[i])):
-                x = Xo + j
-                b = block.IRON_BLOCK if layer[i][j] == 1 else block.AIR
-                mc.setBlock(x, y, z, b.id, b.data)
-        z -= 1
-
-
-    for n in range(0, 7):
-        layer = SPACE_SHIP[0]
-        for i in range(0, len(layer)):
-            y = Yo + i
-            for j in range(0, len(layer[i])):
-                x = Xo + j
-                b = block.IRON_BLOCK if layer[i][j] == 1 else block.AIR
-                mc.setBlock(x, y, z, b.id, b.data)
-        z -= 1
-
-    for layer in SPACE_SHIP:
-        for i in range(0, len(layer)):
-            y = Yo + i
-            for j in range(0, len(layer[i])):
-                x = Xo + j
-                b = block.IRON_BLOCK if layer[i][j] == 1 else block.AIR
-                mc.setBlock(x, y, z, b.id, b.data)
-        z -= 1
-
-    for n in range(0, 2):
-        layer = SPACE_SHIP[-1]
-        for i in range(0, len(layer)):
-            y = Yo + i
-            for j in range(0, len(layer[i])):
-                x = Xo + j
-                b = block.IRON_BLOCK if layer[i][j] == 1 else block.AIR
-                mc.setBlock(x, y, z, b.id, b.data)
-        z -= 1
-
-    for n in reversed(range(0, len(SPACE_SHIP))):
-        layer = SPACE_SHIP[n]
-        for i in range(0, len(layer)):
-            y = Yo + i
-            for j in range(0, len(layer[i])):
-                x = Xo + j
-                b = block.IRON_BLOCK if layer[i][j] == 1 else block.AIR
-                mc.setBlock(x, y, z, b.id, b.data)
-        z -= 1
+    ## build some ships
+    spaceship_builder = Spaceship()
+    spaceship_builder.build_explorer_ship(Vec3(Xo, Yo, Zo))
+    spaceship_builder.build_mother_ship(Vec3(Xo+40, Yo, Zo))
 
 
         ### box coordinates for house to scan
