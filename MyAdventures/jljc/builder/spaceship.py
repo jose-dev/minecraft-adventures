@@ -67,9 +67,9 @@ class Spaceship(object):
             [0,0,1,0,0,0,0,0,1,0,0],
             [0,1,0,0,0,0,0,0,0,1,0],
             [1,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,1],
-            [1,0,0,0,0,0,0,0,0,0,1],
+            [2,0,0,0,0,0,0,0,0,0,2],
+            [2,0,0,0,0,0,0,0,0,0,2],
+            [2,0,0,0,0,0,0,0,0,0,2],
             [1,0,0,0,0,0,0,0,0,0,1],
             [0,1,0,0,0,0,0,0,0,1,0],
             [0,0,1,0,0,0,0,0,1,0,0],
@@ -84,14 +84,18 @@ class Spaceship(object):
         Yo= pos.y
         Zo = pos.z
 
-        ## build spaceship body
+        # build
         z = Zo
         for layer in self.FRAME_LAYERS:
             for i in range(0, len(layer)):
                 y = Yo + i
                 for j in range(0, len(layer[i])):
                     x = Xo + j
-                    b = block.IRON_BLOCK if layer[i][j] == 1 else block.AIR
+                    b = block.AIR
+                    if layer[i][j] == 1:
+                        b = block.IRON_BLOCK
+                    elif layer[i][j] == 2:
+                        b = block.GLASS
                     mc.setBlock(x, y, z, b.id, b.data)
             z += 1
 
@@ -101,7 +105,11 @@ class Spaceship(object):
                 y = Yo + i
                 for j in range(0, len(layer[i])):
                     x = Xo + j
-                    b = block.IRON_BLOCK if layer[i][j] == 1 else block.AIR
+                    b = block.AIR
+                    if layer[i][j] == 1:
+                        b = block.IRON_BLOCK
+                    elif layer[i][j] == 2:
+                        b = block.GLASS
                     mc.setBlock(x, y, z, b.id, b.data)
             z += 1
 
@@ -111,7 +119,11 @@ class Spaceship(object):
                 y = Yo + i
                 for j in range(0, len(layer[i])):
                     x = Xo + j
-                    b = block.IRON_BLOCK if layer[i][j] == 1 else block.AIR
+                    b = block.AIR
+                    if layer[i][j] == 1:
+                        b = block.IRON_BLOCK
+                    elif layer[i][j] == 2:
+                        b = block.GLASS
                     mc.setBlock(x, y, z, b.id, b.data)
             z += 1
 
