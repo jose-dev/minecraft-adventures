@@ -151,6 +151,8 @@ class Spaceship(object):
         pos = self._build_neck(pos, 4, blocks)
         pos = self._build_body(pos, 20, blocks)
         pos = self._build_neck(pos, 7, blocks)
+        pos = self._build_body(pos, 2, blocks)
+        pos = self._build_neck(pos, 7, blocks)
         pos = self.build_explorer_ship(pos, blocks)
         return pos
 
