@@ -158,13 +158,29 @@ class Spaceship(object):
 
 
 
+    def build_mother_ship_tail(self, pos, blocks=None):
+        pos = self._build_body(pos, 2, blocks)
+        pos = self._build_neck(pos, 7, blocks)
+        pos = self.build_explorer_ship(pos, blocks)
+        return pos
+
+
+
     def build_mother_ship(self, pos, blocks=None):
+        # main
         pos = self._build_body(pos, 7, blocks)
         pos = self._build_neck(pos, 4, blocks)
         pos = self._build_body(pos, 20, blocks)
         pos = self._build_neck(pos, 7, blocks)
-        pos = self._build_body(pos, 2, blocks)
-        pos = self._build_neck(pos, 7, blocks)
-        pos = self.build_explorer_ship(pos, blocks)
+        saved_pos = Vec3(pos.x, pos.y, pos.z)
+        pos = self.build_mother_ship_tail(pos, blocks)
+
+        # sides
+        x_shift = 15
+        p1 = Vec3(saved_pos.x + x_shift, saved_pos.y, saved_pos.z)
+        p2 = Vec3(saved_pos.x - x_shift, saved_pos.y, saved_pos.z)
+        self.build_mother_ship_tail(p1, blocks)
+        self.build_mother_ship_tail(p2, blocks)
+
         return pos
 
