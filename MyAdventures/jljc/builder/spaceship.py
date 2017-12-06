@@ -78,14 +78,15 @@ class Spaceship(object):
     ]
 
 
-    def _build_body(self, pos, length=None, blocks=None):
-        ## starting coordiantes
+    def _build_body(self, pos, length=None, blocks=[block.IRON_BLOCK]):
+        ## starting coordinates
         Xo = pos.x
         Yo= pos.y
         Zo = pos.z
 
         # build
         z = Zo
+        bindex = 0
         for layer in self.FRAME_LAYERS:
             for i in range(0, len(layer)):
                 y = Yo + i
@@ -93,10 +94,13 @@ class Spaceship(object):
                     x = Xo + j
                     b = block.AIR
                     if layer[i][j] == 1:
-                        b = block.IRON_BLOCK
+                        b = blocks[bindex]
                     elif layer[i][j] == 2:
                         b = block.GLASS
                     mc.setBlock(x, y, z, b.id, b.data)
+            bindex += 1
+            if bindex >= len(blocks):
+                bindex = 0
             z += 1
 
         for n in range(0, length + 1):
@@ -107,10 +111,13 @@ class Spaceship(object):
                     x = Xo + j
                     b = block.AIR
                     if layer[i][j] == 1:
-                        b = block.IRON_BLOCK
+                        b = blocks[bindex]
                     elif layer[i][j] == 2:
                         b = block.GLASS
                     mc.setBlock(x, y, z, b.id, b.data)
+            bindex += 1
+            if bindex >= len(blocks):
+                bindex = 0
             z += 1
 
         for n in reversed(range(0, len(self.FRAME_LAYERS))):
@@ -121,66 +128,73 @@ class Spaceship(object):
                     x = Xo + j
                     b = block.AIR
                     if layer[i][j] == 1:
-                        b = block.IRON_BLOCK
+                        b = blocks[bindex]
                     elif layer[i][j] == 2:
                         b = block.GLASS
                     mc.setBlock(x, y, z, b.id, b.data)
+            bindex += 1
+            if bindex >= len(blocks):
+                bindex = 0
             z += 1
 
         return Vec3(Xo, Yo, z)
 
 
-    def _build_neck(self, pos, length=None, blocks=None):
-        ## starting coordiantes
+    def _build_neck(self, pos, length=None, blocks=[block.IRON_BLOCK]):
+        ## starting coordinates
         Xo = pos.x
         Yo= pos.y
         z = pos.z
 
         ## build spaceship neck
+        bindex = 0
         for n in range(0, length + 1):
             layer = self.FRAME_LAYERS[0]
             for i in range(0, len(layer)):
                 y = Yo + i
                 for j in range(0, len(layer[i])):
                     x = Xo + j
-                    b = block.IRON_BLOCK if layer[i][j] == 1 else block.AIR
+                    b = blocks[bindex] if layer[i][j] == 1 else block.AIR
                     mc.setBlock(x, y, z, b.id, b.data)
+            bindex += 1
+            if bindex >= len(blocks):
+                bindex = 0
             z += 1
 
         return Vec3(Xo, Yo, z)
 
 
-    def build_explorer_ship(self, pos, blocks=None):
-        pos = self._build_body(pos, 2, blocks)
-        pos = self._build_neck(pos, 7, blocks)
-        pos = self._build_body(pos, 2, blocks)
+    def build_explorer_ship(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
+        pos = self._build_body(pos, 2, body_blocks)
+        pos = self._build_neck(pos, 7, neck_blocks)
+        pos = self._build_body(pos, 2, body_blocks)
         return pos
 
 
 
-    def build_mother_ship_tail(self, pos, blocks=None):
-        pos = self._build_body(pos, 2, blocks)
-        pos = self._build_neck(pos, 7, blocks)
-        pos = self.build_explorer_ship(pos, blocks)
+    def build_mother_ship_tail(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
+        pos = self._build_body(pos, 2, body_blocks)
+        pos = self._build_neck(pos, 7, neck_blocks)
+        pos = self.build_explorer_ship(pos, body_blocks, neck_blocks)
         return pos
 
 
 
-    def build_mother_ship(self, pos, blocks=None):
+    def build_mother_ship(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
         # main
-        pos = self._build_body(pos, 7, blocks)
-        pos = self._build_neck(pos, 4, blocks)
-        pos = self._build_body(pos, 20, blocks)
-        pos = self._build_neck(pos, 7, blocks)
+        pos = self._build_body(pos, 7, body_blocks)
+        pos = self._build_neck(pos, 4, neck_blocks)
+        pos = self._build_body(pos, 20, body_blocks)
+        pos = self._build_neck(pos, 7, neck_blocks)
         saved_pos = Vec3(pos.x, pos.y, pos.z)
-        pos = self.build_mother_ship_tail(pos, blocks)
+        pos = self.build_mother_ship_tail(pos, body_blocks, neck_blocks)
 
         # sides
         x_shift = 15
         p1 = Vec3(saved_pos.x + x_shift, saved_pos.y, saved_pos.z)
         p2 = Vec3(saved_pos.x - x_shift, saved_pos.y, saved_pos.z)
-        self.build_mother_ship_tail(p1, blocks)
-        self.build_mother_ship_tail(p2, blocks)
+        self.build_mother_ship_tail(p1, body_blocks, neck_blocks)
+        self.build_mother_ship_tail(p2, body_blocks, neck_blocks)
 
         return pos
 
