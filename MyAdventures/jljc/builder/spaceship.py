@@ -9,6 +9,8 @@ mc = minecraft.Minecraft.create()
 scanner = ScanPrint3D(mc)
 
 class Spaceship(object):
+    window_block = block.AIR
+    x_shift = 10
     FRAME_LAYERS = [
         [
             [0,0,0,0,0,0,0,0,0,0,0],
@@ -96,7 +98,7 @@ class Spaceship(object):
                     if layer[i][j] == 1:
                         b = blocks[bindex]
                     elif layer[i][j] == 2:
-                        b = block.GLASS
+                        b = self.window_block
                     mc.setBlock(x, y, z, b.id, b.data)
             bindex += 1
             if bindex >= len(blocks):
@@ -113,7 +115,7 @@ class Spaceship(object):
                     if layer[i][j] == 1:
                         b = blocks[bindex]
                     elif layer[i][j] == 2:
-                        b = block.GLASS
+                        b = self.window_block
                     mc.setBlock(x, y, z, b.id, b.data)
             bindex += 1
             if bindex >= len(blocks):
@@ -130,7 +132,7 @@ class Spaceship(object):
                     if layer[i][j] == 1:
                         b = blocks[bindex]
                     elif layer[i][j] == 2:
-                        b = block.GLASS
+                        b = self.window_block
                     mc.setBlock(x, y, z, b.id, b.data)
             bindex += 1
             if bindex >= len(blocks):
@@ -172,29 +174,70 @@ class Spaceship(object):
 
 
 
-    def build_mother_ship_tail(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
+    def _build_command_ship_tail(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
         pos = self._build_body(pos, 2, body_blocks)
         pos = self._build_neck(pos, 7, neck_blocks)
         pos = self.build_explorer_ship(pos, body_blocks, neck_blocks)
         return pos
 
 
-
-    def build_mother_ship(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
+    def build_command_ship(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
         # main
         pos = self._build_body(pos, 7, body_blocks)
         pos = self._build_neck(pos, 4, neck_blocks)
         pos = self._build_body(pos, 20, body_blocks)
         pos = self._build_neck(pos, 7, neck_blocks)
         saved_pos = Vec3(pos.x, pos.y, pos.z)
-        pos = self.build_mother_ship_tail(pos, body_blocks, neck_blocks)
+        pos = self.build_explorer_ship(pos, body_blocks, neck_blocks)
 
         # sides
-        x_shift = 15
-        p1 = Vec3(saved_pos.x + x_shift, saved_pos.y, saved_pos.z)
-        p2 = Vec3(saved_pos.x - x_shift, saved_pos.y, saved_pos.z)
-        self.build_mother_ship_tail(p1, body_blocks, neck_blocks)
-        self.build_mother_ship_tail(p2, body_blocks, neck_blocks)
+        p1 = Vec3(saved_pos.x + self.x_shift, saved_pos.y, saved_pos.z)
+        p2 = Vec3(saved_pos.x - self.x_shift, saved_pos.y, saved_pos.z)
+        self._build_command_ship_tail(p1, body_blocks, neck_blocks)
+        self._build_command_ship_tail(p2, body_blocks, neck_blocks)
 
         return pos
+
+
+    def build_mother_ship(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
+        # central
+        pos = self._build_body(pos, 7, body_blocks)
+        pos = self._build_neck(pos, 4, neck_blocks)
+        saved_pos = Vec3(pos.x, pos.y, pos.z)
+        pos = self._build_mother_ship_tail(pos, body_blocks, neck_blocks)
+
+        # sides
+        self._build_mother_ship_side_left_tail(saved_pos, body_blocks, neck_blocks)
+        self._build_mother_ship_side_right_tail(saved_pos, body_blocks, neck_blocks)
+
+        return pos
+
+
+    def _build_mother_ship_tail(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
+        pos = self._build_body(pos, 20, body_blocks)
+        pos = self._build_neck(pos, 7, neck_blocks)
+        pos = self.build_explorer_ship(pos, body_blocks, neck_blocks)
+        return pos
+
+
+    def _build_mother_ship_side_left_tail(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
+        return self._build_mother_ship_side_tail(pos, body_blocks, neck_blocks, self.x_shift)
+
+
+    def _build_mother_ship_side_right_tail(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
+        return self._build_mother_ship_side_tail(pos, body_blocks, neck_blocks, self.x_shift * -1)
+
+
+    def _build_mother_ship_side_tail(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK], factor=None):
+        # inner side
+        pos = Vec3(pos.x + factor, pos.y, pos.z)
+        pos = self._build_body(pos, 20, body_blocks)
+        pos = self._build_neck(pos, 7, neck_blocks)
+        saved_pos = Vec3(pos.x, pos.y, pos.z)
+        pos = self._build_command_ship_tail(pos, body_blocks, neck_blocks)
+
+        # further sides
+        p1 = Vec3(saved_pos.x + factor, saved_pos.y, saved_pos.z)
+        self._build_command_ship_tail(p1, body_blocks, neck_blocks)
+
 

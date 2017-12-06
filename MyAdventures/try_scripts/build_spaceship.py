@@ -41,7 +41,10 @@ if __name__ == "__main__":
     spaceship_builder.build_explorer_ship(Vec3(Xo, Yo, Zo),
                                           [block.GLOWSTONE_BLOCK, block.OBSIDIAN, block.OBSIDIAN, block.GLOWSTONE_BLOCK],
                                           [block.OBSIDIAN])
-    spaceship_builder.build_mother_ship(Vec3(Xo+40, Yo, Zo),
+    spaceship_builder.build_mother_ship(Vec3(Xo+150, Yo, Zo),
+                                        [block.GLOWSTONE_BLOCK, block.OBSIDIAN, block.OBSIDIAN, block.GLOWSTONE_BLOCK],
+                                        [block.OBSIDIAN])
+    spaceship_builder.build_command_ship(Vec3(Xo+40, Yo, Zo),
                                         [block.GLOWSTONE_BLOCK, block.OBSIDIAN, block.OBSIDIAN, block.GLOWSTONE_BLOCK],
                                         [block.OBSIDIAN])
 
