@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     ## starting coordiantes
     Xo = 82
-    Yo= 40
+    Yo= 120
     Zo = -234
 
 

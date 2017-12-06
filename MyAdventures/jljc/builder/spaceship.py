@@ -10,7 +10,6 @@ scanner = ScanPrint3D(mc)
 
 class Spaceship(object):
     window_block = block.AIR
-    x_shift = 10
     FRAME_LAYERS = [
         [
             [0,0,0,0,0,0,0,0,0,0,0],
@@ -78,6 +77,8 @@ class Spaceship(object):
             [0,0,0,1,1,1,1,1,0,0,0]
         ]
     ]
+    x_shift = len(FRAME_LAYERS[0])
+
 
 
     def _build_body(self, pos, length=None, blocks=[block.IRON_BLOCK]):
@@ -166,6 +167,10 @@ class Spaceship(object):
         return Vec3(Xo, Yo, z)
 
 
+    ##### EXLORER SHIP
+    #
+    #
+    #
     def build_explorer_ship(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
         pos = self._build_body(pos, 2, body_blocks)
         pos = self._build_neck(pos, 7, neck_blocks)
@@ -173,14 +178,10 @@ class Spaceship(object):
         return pos
 
 
-
-    def _build_command_ship_tail(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
-        pos = self._build_body(pos, 2, body_blocks)
-        pos = self._build_neck(pos, 7, neck_blocks)
-        pos = self.build_explorer_ship(pos, body_blocks, neck_blocks)
-        return pos
-
-
+    ##### COMMAND SHIP
+    #
+    #
+    #
     def build_command_ship(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
         # main
         pos = self._build_body(pos, 7, body_blocks)
@@ -191,14 +192,39 @@ class Spaceship(object):
         pos = self.build_explorer_ship(pos, body_blocks, neck_blocks)
 
         # sides
-        p1 = Vec3(saved_pos.x + self.x_shift, saved_pos.y, saved_pos.z)
-        p2 = Vec3(saved_pos.x - self.x_shift, saved_pos.y, saved_pos.z)
-        self._build_command_ship_tail(p1, body_blocks, neck_blocks)
-        self._build_command_ship_tail(p2, body_blocks, neck_blocks)
+        self._build_command_ship_left_tail(saved_pos, body_blocks, neck_blocks)
+        self._build_command_ship_right_tail(saved_pos, body_blocks, neck_blocks)
 
         return pos
 
 
+    def _build_command_ship_tail(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK], factor=0):
+        pos = Vec3(pos.x + factor, pos.y, pos.z)
+
+        pos = self._build_body(pos, 2, body_blocks)
+        pos = self._build_neck(pos, 7, neck_blocks)
+        saved_pos = Vec3(pos.x, pos.y, pos.z)
+        pos = self.build_explorer_ship(pos, body_blocks, neck_blocks)
+
+        # further sides
+        p1 = Vec3(saved_pos.x + factor, saved_pos.y, saved_pos.z)
+        self.build_explorer_ship(p1, body_blocks, neck_blocks)
+
+        return pos
+
+
+    def _build_command_ship_left_tail(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
+        self._build_command_ship_tail(pos, body_blocks, neck_blocks, self.x_shift)
+
+
+    def _build_command_ship_right_tail(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
+        self._build_command_ship_tail(pos, body_blocks, neck_blocks, self.x_shift * -1)
+
+
+    ##### MOTHER SHIP
+    #
+    #
+    #
     def build_mother_ship(self, pos, body_blocks=[block.IRON_BLOCK], neck_blocks=[block.IRON_BLOCK]):
         # central
         pos = self._build_body(pos, 7, body_blocks)
@@ -239,5 +265,11 @@ class Spaceship(object):
         # further sides
         p1 = Vec3(saved_pos.x + factor, saved_pos.y, saved_pos.z)
         self._build_command_ship_tail(p1, body_blocks, neck_blocks)
+
+        # further sides
+        p2 = Vec3(saved_pos.x + factor * 2, saved_pos.y, saved_pos.z)
+        pos = self._build_body(p2, 2, [block.AIR])
+        pos = self._build_neck(pos, 7, [block.AIR])
+        pos = self.build_explorer_ship(pos, body_blocks, neck_blocks)
 
 
