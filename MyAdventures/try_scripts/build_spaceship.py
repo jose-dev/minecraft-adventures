@@ -9,18 +9,18 @@ from jljc.printer_3d.coordinate_utils import CoordinateUtils
 from jljc.printer_3d.scan_print_3d import ScanPrint3D
 
 SCAN_DATA = {
-    #'command': {
-    #    'file': 'command_ship_001.json',
-    #    'coord': [Vec3(90, 119, -238), Vec3(160, 130, -116)]
-    #},
-    'explorer': {
-        'file': 'explorer_ship_001.json',
-        'coord': [Vec3(81, 119, -235), Vec3(94, 130, -200)]
+    'command': {
+        'file': 'command_ship_001.json',
+        'coord': [Vec3(90, 119, -238), Vec3(160, 130, -116)]
     },
-    #'mother': {
-    #    'file': 'mother_ship_001.json',
-    #    'coord': [Vec3(198, 119, -238), Vec3(276, 130, -116)]
-    #}
+    #'explorer': {
+    #    'file': 'explorer_ship_001.json',
+    #    'coord': [Vec3(81, 119, -235), Vec3(94, 130, -200)]
+    #},
+    'mother': {
+        'file': 'mother_ship_001.json',
+        'coord': [Vec3(198, 119, -238), Vec3(276, 130, -116)]
+    }
 }
 
 mc = minecraft.Minecraft.create()
@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
 
     ### build ships
-    v = Vec3(0, 20, -100)
+    v = Vec3(0, 40, -100)
     for md in SCAN_DATA:
         print("Printing {}...".format(md))
         data_file = SCAN_DATA[md]['file']
