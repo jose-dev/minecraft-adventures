@@ -8,7 +8,20 @@ from jljc.builder.spaceship import Spaceship
 from jljc.printer_3d.coordinate_utils import CoordinateUtils
 from jljc.printer_3d.scan_print_3d import ScanPrint3D
 
-DATA_FILE = 'space_ship_001.json'
+SCAN_DATA = {
+    #'command': {
+    #    'file': 'command_ship_001.json',
+    #    'coord': [Vec3(90, 119, -238), Vec3(160, 130, -116)]
+    #},
+    'explorer': {
+        'file': 'explorer_ship_001.json',
+        'coord': [Vec3(81, 119, -235), Vec3(94, 130, -200)]
+    },
+    #'mother': {
+    #    'file': 'mother_ship_001.json',
+    #    'coord': [Vec3(198, 119, -238), Vec3(276, 130, -116)]
+    #}
+}
 
 mc = minecraft.Minecraft.create()
 scanner = ScanPrint3D(mc)
@@ -36,35 +49,41 @@ if __name__ == "__main__":
     Zo = -234
 
 
-    ## build some ships
-    spaceship_builder = Spaceship()
-    spaceship_builder.build_explorer_ship(Vec3(Xo, Yo, Zo),
-                                          [block.GLOWSTONE_BLOCK, block.OBSIDIAN, block.OBSIDIAN, block.GLOWSTONE_BLOCK],
-                                          [block.OBSIDIAN])
-    spaceship_builder.build_mother_ship(Vec3(Xo+150, Yo, Zo),
-                                        [block.GLOWSTONE_BLOCK, block.OBSIDIAN, block.OBSIDIAN, block.GLOWSTONE_BLOCK],
-                                        [block.OBSIDIAN])
-    spaceship_builder.build_command_ship(Vec3(Xo+40, Yo, Zo),
-                                        [block.GLOWSTONE_BLOCK, block.OBSIDIAN, block.OBSIDIAN, block.GLOWSTONE_BLOCK],
-                                        [block.OBSIDIAN])
+    ### build some ships
+    #spaceship_builder = Spaceship()
+    #spaceship_builder.build_explorer_ship(Vec3(Xo, Yo, Zo),
+    #                                      [block.GLOWSTONE_BLOCK, block.OBSIDIAN, block.OBSIDIAN, block.GLOWSTONE_BLOCK],
+    #                                      [block.OBSIDIAN])
+    #spaceship_builder.build_mother_ship(Vec3(Xo+150, Yo, Zo),
+    #                                    [block.GLOWSTONE_BLOCK, block.OBSIDIAN, block.OBSIDIAN, block.GLOWSTONE_BLOCK],
+    #                                    [block.OBSIDIAN])
+    #spaceship_builder.build_command_ship(Vec3(Xo+40, Yo, Zo),
+    #                                    [block.GLOWSTONE_BLOCK, block.OBSIDIAN, block.OBSIDIAN, block.GLOWSTONE_BLOCK],
+    #                                    [block.OBSIDIAN])
 
 
-        ### box coordinates for house to scan
-    #v1 = Vec3(120, 0, -217)
-    #v2 = Vec3(128, 4, -208)
+    ## scan ships
+    for md in SCAN_DATA:
+        print("Scanning {}...".format(md))
+        v1 = SCAN_DATA[md]['coord'][0]
+        v2 = SCAN_DATA[md]['coord'][1]
+        data_file = SCAN_DATA[md]['file']
+        data = scanner.scan_3d(v1, v2)
+        data = CoordinateUtils.calculate_relative_coordinates(data)
+        CoordinateUtils.save_data_to_file(data, data_file)
 
-    ### scan house
-    #data = scanner.scan_3d(v1, v2)
-    #data = CoordinateUtils.calculate_relative_coordinates(data)
-    #CoordinateUtils.save_data_to_file(data, DATA_FILE)
 
-    ### point to house
-    #v = Vec3(112, 0, -234)
+    ### build ships
+    v = Vec3(0, 20, -100)
+    for md in SCAN_DATA:
+        print("Printing {}...".format(md))
+        data_file = SCAN_DATA[md]['file']
+        data = CoordinateUtils.read_data_from_file(data_file)
+        data = CoordinateUtils.shift_coordinates(data, v)
+        scanner.print_3d(data)
+        v.y += 20
 
-    ### build house
-    #data = CoordinateUtils.read_data_from_file(DATA_FILE)
-    #data = CoordinateUtils.shift_coordinates(data, v)
-    #scanner.print_3d(data)
+
 
     ### build street
     #gap_z = -10
