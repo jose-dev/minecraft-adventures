@@ -13,10 +13,10 @@ SCAN_DATA = {
         'file': 'command_ship_001.json',
         'coord': [Vec3(90, 119, -238), Vec3(160, 130, -116)]
     },
-    #'explorer': {
-    #    'file': 'explorer_ship_001.json',
-    #    'coord': [Vec3(81, 119, -235), Vec3(94, 130, -200)]
-    #},
+    'explorer': {
+       'file': 'explorer_ship_001.json',
+       'coord': [Vec3(81, 119, -235), Vec3(94, 130, -200)]
+    },
     'mother': {
         'file': 'mother_ship_001.json',
         'coord': [Vec3(198, 119, -238), Vec3(276, 130, -116)]
@@ -62,19 +62,19 @@ if __name__ == "__main__":
     #                                    [block.OBSIDIAN])
 
 
-    ## scan ships
-    for md in SCAN_DATA:
-        print("Scanning {}...".format(md))
-        v1 = SCAN_DATA[md]['coord'][0]
-        v2 = SCAN_DATA[md]['coord'][1]
-        data_file = SCAN_DATA[md]['file']
-        data = scanner.scan_3d(v1, v2)
-        data = CoordinateUtils.calculate_relative_coordinates(data)
-        CoordinateUtils.save_data_to_file(data, data_file)
+    #### scan ships
+    #for md in SCAN_DATA:
+    #    print("Scanning {}...".format(md))
+    #    v1 = SCAN_DATA[md]['coord'][0]
+    #    v2 = SCAN_DATA[md]['coord'][1]
+    #    data_file = SCAN_DATA[md]['file']
+    #    data = scanner.scan_3d(v1, v2)
+    #    data = CoordinateUtils.calculate_relative_coordinates(data)
+    #    CoordinateUtils.save_data_to_file(data, data_file)
 
 
-    ### build ships
-    v = Vec3(0, 40, -100)
+    #### build ships
+    v = Vec3(0, 20, -100)
     for md in SCAN_DATA:
         print("Printing {}...".format(md))
         data_file = SCAN_DATA[md]['file']
@@ -84,20 +84,5 @@ if __name__ == "__main__":
         v.y += 20
 
 
-
-    ### build street
-    #gap_z = -10
-    #orig_data = CoordinateUtils.read_data_from_file(DATA_FILE)
-
-    #import pprint
-    #pprint.pprint(orig_data)
-
-    #gap_z += -1 * (orig_data['box']['max']['z'] - orig_data['box']['min']['z'])
-    #for i in range(0, 10):
-    #    print(v)
-    #    data = CoordinateUtils.shift_coordinates(orig_data, v)
-    #    scanner.print_3d(data)
-    #    v.z += gap_z
-    #    time.sleep(3)
 
 
