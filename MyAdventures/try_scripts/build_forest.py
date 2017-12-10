@@ -2,10 +2,28 @@ import mcpi.minecraft as minecraft
 import mcpi.block as block
 import time
 from mcpi.vec3 import Vec3
+import os
+import random
+
+from jljc.printer_3d.coordinate_utils import CoordinateUtils
+from jljc.printer_3d.scan_print_3d import ScanPrint3D
+
+
+
+
+TREE_GAP = 15
+TREE_RANDOM_GAP = range(-3, 3)
+TREE_DATA = {}
+TREE_PATH = '../resources/scans/trees'
+TREES = ['tree001.json', 'tree002.json']
+for t in TREES:
+    TREE_DATA[t] = CoordinateUtils.read_data_from_file((os.path.join(TREE_PATH, t)))
 
 
 
 mc = minecraft.Minecraft.create()
+scanner = ScanPrint3D(mc)
+
 
 
 time.sleep(2)
@@ -16,27 +34,25 @@ mc.postToChat("x: {0} y: {1} z: {2}".format(str(pos.x),
 
 
 ## starting coordinates
-Y = -1
-Xo = -175
-Xi = -125
-Zo = 0
-Zi = 50
+Y = 0
 
-factor = 2
+Xo = -200
+Zo = 0
+
+Xe = -100
+Ze = 100
+
 
 ## bedrock base
-print("Build pond...")
-for i in range(0, 6):
-    v1 = Vec3(Xo, Y, Zo)
-    v2 = Vec3(Xi, Y, Zi)
-    mc.setBlocks(v1.x,
-                 v1.y,
-                 v1.z,
-                 v2.x,
-                 v2.y,
-                 v2.z,
-                 block.WATER_STATIONARY)
-    Xo -= factor
-    Xi -= factor
-    Zo += factor
-    Zi += factor
+print("Growing forest...")
+for i in range(Xo, Xe, TREE_GAP):
+    for j in range(Zo, Ze, TREE_GAP):
+        tree = random.choice(TREES)
+        tree_data = TREE_DATA[tree]
+
+        x = i + random.choice(TREE_RANDOM_GAP)
+        z = j + random.choice(TREE_RANDOM_GAP)
+        v = Vec3(x, Y, z)
+
+        data = CoordinateUtils.shift_coordinates(tree_data, v)
+        scanner.print_3d(data)
