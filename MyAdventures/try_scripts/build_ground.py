@@ -48,15 +48,15 @@ mc.setBlocks(v11.x,
 
 
 ## rock slab base
-print("Prepare rock slab base...")
-v111 = Vec3(Xo + 36, v22.y + 1, Zo + 36)
-v222 = Vec3(Xo + 69, v111.y, Zo + 65)
-mc.setBlocks(v111.x,
-             v111.y,
-             v111.z,
-             v222.x,
-             v222.y,
-             v222.z,
-             block.STONE_SLAB)
+#print("Prepare rock slab base...")
+#v111 = Vec3(Xo + 36, v22.y + 1, Zo + 36)
+#v222 = Vec3(Xo + 69, v111.y, Zo + 65)
+#mc.setBlocks(v111.x,
+#             v111.y,
+#             v111.z,
+#             v222.x,
+#             v222.y,
+#             v222.z,
+#             block.STONE_SLAB)
 
 
