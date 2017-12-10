@@ -49,7 +49,7 @@ mc.setBlocks(v11.x,
 
 ## rock slab base
 print("Prepare rock slab base...")
-v11 = Vec3(Xo, v2.y + 1, Zo)
+v11 = Vec3(Xo, v11.y + 1, Zo)
 v22 = Vec3(v2.x, v11.y, v2.z)
 mc.setBlocks(v11.x,
              v11.y,

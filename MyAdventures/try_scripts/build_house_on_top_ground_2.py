@@ -36,10 +36,10 @@ if __name__ == "__main__":
 
     ##### initial coordinates
     Xo = -160
-    Yo= -1
+    Yo= 0
     Zo = 40
 
-    #### build original mansion on top of ground
+    ##### build original mansion on top of ground
     #v = Vec3(Xo, Yo, Zo)
     #print("Printing ...")
     #data_file = HOUSE_DATA
@@ -47,19 +47,19 @@ if __name__ == "__main__":
     #data = CoordinateUtils.shift_coordinates(data, v)
     #scanner.print_3d(data)
 
-    ##### scan house
-    #print("Scanning ...")
-    #v1 = Vec3(Xo - 2, 0, Zo - 2)
-    #v2 = Vec3(-137, 16, 52)
-    #data_file = NEW_HOUSE_DATA
-    #data = scanner.scan_3d(v1, v2)
-    #data = CoordinateUtils.calculate_relative_coordinates(data)
-    #CoordinateUtils.save_data_to_file(data, data_file)
+    #### scan house
+    print("Scanning ...")
+    v1 = Vec3(-162, 0, 38)
+    v2 = Vec3(-133, 18, 52)
+    data_file = NEW_HOUSE_DATA
+    data = scanner.scan_3d(v1, v2)
+    data = CoordinateUtils.calculate_relative_coordinates(data)
+    CoordinateUtils.save_data_to_file(data, data_file)
 
 
     ##### build house
     x = 40
-    y = -8
+    y = -9
     z  = 0
     v = Vec3(x, y, z)
     print("Printing ...")
