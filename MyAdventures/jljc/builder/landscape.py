@@ -36,6 +36,7 @@ class Pond(object):
             Zi += factor_z
 
 
+
 class Forest(object):
     TREE_GAP = 15
     TREE_RANDOM_GAP = range(-3, 3)
@@ -57,6 +58,14 @@ class Forest(object):
                 z = j + random.choice(cls.TREE_RANDOM_GAP)
                 v = Vec3(x, Y, z)
 
-                data = CoordinateUtils.shift_coordinates(tree_data, v)
-                scanner.print_3d(data)
+                if not cls.is_within_excluded(v, exclude):
+                    data = CoordinateUtils.shift_coordinates(tree_data, v)
+                    scanner.print_3d(data)
 
+
+    @classmethod
+    def is_within_excluded(cls, v=None, exclude=None):
+        for ex in exclude:
+            if ex['Xo'] <= v.x <= ex['Xe'] and ex['Zo'] <= v.z <= ex['Ze']:
+                return True
+        return False
