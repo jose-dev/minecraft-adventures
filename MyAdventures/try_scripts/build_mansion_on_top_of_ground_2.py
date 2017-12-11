@@ -40,12 +40,12 @@ if __name__ == "__main__":
     Zo = 34
 
     ##### build original mansion on top of ground
-    v = Vec3(Xo, Yo, Zo)
-    print("Printing ...")
-    data_file = STARTING_MANSION_DATA
-    data = CoordinateUtils.read_data_from_file(data_file)
-    data = CoordinateUtils.shift_coordinates(data, v)
-    scanner.print_3d(data)
+    #v = Vec3(Xo, Yo, Zo)
+    #print("Printing ...")
+    #data_file = STARTING_MANSION_DATA
+    #data = CoordinateUtils.read_data_from_file(data_file)
+    #data = CoordinateUtils.shift_coordinates(data, v)
+    #scanner.print_3d(data)
 
 
     ###### scan mansion
@@ -60,15 +60,15 @@ if __name__ == "__main__":
 
 
     #### build mansion
-    #x = 40
-    #y = 0
-    #z  = 0
-    #v = Vec3(x, y, z)
-    #print("Printing ...")
-    #data_file = MANSION_DATA
-    #data = CoordinateUtils.read_data_from_file(data_file)
-    #data = CoordinateUtils.shift_coordinates(data, v)
-    #scanner.print_3d(data)
+    x = 140
+    y = 0
+    z  = 0
+    v = Vec3(x, y, z)
+    print("Printing ...")
+    data_file = MANSION_DATA
+    data = CoordinateUtils.read_data_from_file(data_file)
+    data = CoordinateUtils.shift_coordinates(data, v)
+    scanner.print_3d(data)
 
 
 
