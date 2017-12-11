@@ -10,7 +10,7 @@ from jljc.printer_3d.scan_print_3d import ScanPrint3D
 
 
 STARTING_MANSION_DATA = 'mansion_003.json'
-MANSION_DATA = 'selina_mansion_001.json'
+MANSION_DATA = 'talia_mansion_001.json'
 
 
 mc = minecraft.Minecraft.create()
@@ -40,35 +40,35 @@ if __name__ == "__main__":
     Zo = 34
 
     ##### build original mansion on top of ground
-    #v = Vec3(Xo, Yo, Zo)
-    #print("Printing ...")
-    #data_file = STARTING_MANSION_DATA
-    #data = CoordinateUtils.read_data_from_file(data_file)
-    #data = CoordinateUtils.shift_coordinates(data, v)
-    #scanner.print_3d(data)
+    v = Vec3(Xo, Yo, Zo)
+    print("Printing ...")
+    data_file = STARTING_MANSION_DATA
+    data = CoordinateUtils.read_data_from_file(data_file)
+    data = CoordinateUtils.shift_coordinates(data, v)
+    scanner.print_3d(data)
 
 
     ###### scan mansion
-    print("Scanning ...")
-    v1 = Vec3(Xo, Yo, Zo)
-    v2 = Vec3(-129, 24, 67)
-    data_file = MANSION_DATA
-    data = scanner.scan_3d(v1, v2)
-    data = CoordinateUtils.calculate_relative_coordinates(data)
-    CoordinateUtils.save_data_to_file(data, data_file)
+    #print("Scanning ...")
+    #v1 = Vec3(Xo, Yo, Zo)
+    #v2 = Vec3(-129, 24, 67)
+    #data_file = MANSION_DATA
+    #data = scanner.scan_3d(v1, v2)
+    #data = CoordinateUtils.calculate_relative_coordinates(data)
+    #CoordinateUtils.save_data_to_file(data, data_file)
 
 
 
     #### build mansion
-    x = 40
-    y = 0
-    z  = 0
-    v = Vec3(x, y, z)
-    print("Printing ...")
-    data_file = MANSION_DATA
-    data = CoordinateUtils.read_data_from_file(data_file)
-    data = CoordinateUtils.shift_coordinates(data, v)
-    scanner.print_3d(data)
+    #x = 40
+    #y = 0
+    #z  = 0
+    #v = Vec3(x, y, z)
+    #print("Printing ...")
+    #data_file = MANSION_DATA
+    #data = CoordinateUtils.read_data_from_file(data_file)
+    #data = CoordinateUtils.shift_coordinates(data, v)
+    #scanner.print_3d(data)
 
 
 
