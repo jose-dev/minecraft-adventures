@@ -13,9 +13,45 @@ mc = minecraft.Minecraft.create()
 scanner = ScanPrint3D(mc)
 
 
+BASE_PATH = os.path.dirname(__file__)
+RESOURCES_PATH = os.path.join(BASE_PATH, '..', '..', 'resources')
+DATA_FILES = {
+    'mansion_hill': os.path.join(RESOURCES_PATH, 'scans', 'houses', 'mansion_hill_001.json'),
+    'talia_mansion': os.path.join(RESOURCES_PATH, 'scans', 'houses', 'talia_mansion_001.json'),
+}
+DATA = {}
+for d in DATA_FILES:
+    DATA[d] = CoordinateUtils.read_data_from_file(DATA_FILES[d])
+
+
+
 def main():
-    Pond.build_pond(Y=-1, Xo=40, Xi=110, Zo=0, Zi= 50,
-                    factor_z=4, factor_x=6)
+    """
+    TODO:
+
+    all the coordinates should be saved in a data structure
+    that can be shared between classes
+
+    :return:
+    """
+
+    ## build Talia's mansion
+    x = -140
+    y = 0
+    z = 120
+    v = Vec3(x, y, z)
+    scanner.print_3d(CoordinateUtils.shift_coordinates(DATA['mansion_hill'], v))
+    v = Vec3(x + 4, -5, z + 8)
+    scanner.print_3d(CoordinateUtils.shift_coordinates(DATA['talia_mansion'], v))
+
+
+    ## build pond
+    Xo = -38
+    Zo = 150
+    Xi = Xo + 50
+    Zi = Zo + 70
+    Pond.build_pond(Y=-1, Xo=Xo, Xi=Xi, Zo=Zo, Zi= Zi,
+                    factor_z=6, factor_x=4)
 
 
 

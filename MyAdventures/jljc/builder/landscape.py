@@ -38,10 +38,13 @@ class Pond(object):
 
 
 class Forest(object):
+    BASE_PATH = os.path.dirname(__file__)
+    RESOURCES_PATH = os.path.join(BASE_PATH, '..', '..', 'resources')
+
     TREE_GAP = 15
     TREE_RANDOM_GAP = range(-3, 3)
     TREE_DATA = {}
-    TREE_PATH = '../../resources/scans/trees'
+    TREE_PATH = os.path.join(RESOURCES_PATH, 'scans', 'trees')
     TREES = ['tree001.json', 'tree002.json']
     for t in TREES:
         TREE_DATA[t] = CoordinateUtils.read_data_from_file((os.path.join(TREE_PATH, t)))

@@ -70,7 +70,7 @@ CoordinateUtils.save_data_to_file(data, data_file)
 
 
 ##### build mansion hill
-x = Xo 
+x = Xo
 y = Yo
 z  = Zo + 100
 v = Vec3(x, y, z)
