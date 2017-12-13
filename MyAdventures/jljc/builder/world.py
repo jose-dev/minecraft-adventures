@@ -19,6 +19,7 @@ DATA_FILES = {
     'mansion_hill': os.path.join(RESOURCES_PATH, 'scans', 'houses', 'mansion_hill_001.json'),
     'talia_mansion': os.path.join(RESOURCES_PATH, 'scans', 'houses', 'talia_mansion_001.json'),
     'selina_mansion': os.path.join(RESOURCES_PATH, 'scans', 'houses', 'selina_mansion_001.json'),
+    'house': os.path.join(RESOURCES_PATH, 'scans', 'houses', 'house_004.json'),
 }
 DATA = {}
 for d in DATA_FILES:
@@ -36,14 +37,18 @@ def main():
     :return:
     """
 
+    exclude = []
+
     ## build Talia's mansion
     x = -140
     y = 0
     z = 120
     v = Vec3(x, y, z)
-    scanner.print_3d(CoordinateUtils.shift_coordinates(DATA['mansion_hill'], v))
+    hill_data = CoordinateUtils.shift_coordinates(DATA['mansion_hill'], v)
+    scanner.print_3d(hill_data)
     v = Vec3(x + 4, -5, z + 8)
     scanner.print_3d(CoordinateUtils.shift_coordinates(DATA['talia_mansion'], v))
+    exclude.append(hill_data['box'])
 
 
     ## build pond
@@ -51,8 +56,8 @@ def main():
     Zo = 150
     Xi = Xo + 50
     Zi = Zo + 70
-    Pond.build_pond(Y=-1, Xo=Xo, Xi=Xi, Zo=Zo, Zi= Zi,
-                    factor_z=6, factor_x=4)
+    exclude.append(Pond.build_pond(Y=-1, Xo=Xo, Xi=Xi, Zo=Zo, Zi= Zi,
+                                   factor_z=6, factor_x=4))
 
 
     ## build Talia's mansion
@@ -60,10 +65,40 @@ def main():
     y = 0
     z = 220
     v = Vec3(x, y, z)
-    scanner.print_3d(CoordinateUtils.shift_coordinates(DATA['mansion_hill'], v))
+    hill_data = CoordinateUtils.shift_coordinates(DATA['mansion_hill'], v)
+    scanner.print_3d(hill_data)
     v = Vec3(x + 4, -5, z + 8)
     scanner.print_3d(CoordinateUtils.shift_coordinates(DATA['selina_mansion'], v))
+    exclude.append(hill_data['box'])
 
+
+    ## build houses
+    x = 40
+    y = -9
+    z = 120
+    for i in range(0, 4):
+        v = Vec3(x, y, z)
+        house_data = CoordinateUtils.shift_coordinates(DATA['house'], v)
+        scanner.print_3d(house_data)
+        z += 50
+        exclude.append(house_data['box'])
+
+
+    ## village
+    Xo = -43
+    Zo = 4
+    Xe = 30
+    Ze = 88
+    exclude.append({'min':{'x': Xo, 'y': 0, 'z': Zo},
+                    'max': {'x': Xe, 'y': 0, 'z': Ze}})
+
+
+    ## grow forest within world limits
+    Xo = -150
+    Xe = 80
+    Zo = -4
+    Ze = 320
+    Forest.grow_forest(Xo, Xe, 0, Zo, Ze, exclude)
 
 
 if __name__ == '__main__':

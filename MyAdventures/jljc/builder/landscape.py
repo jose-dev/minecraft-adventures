@@ -20,6 +20,8 @@ class Pond(object):
     @staticmethod
     def build_pond(Xo=None, Xi=None, Y=None, Zo=None, Zi=None,
                    factor_x=factor_x, factor_z=factor_z, N=N):
+        out = {'min':{'x': Xo, 'y': Y},
+               'max': {'x': Xi, 'y': Y}}
         for i in range(1, N+1):
             v1 = Vec3(Xo, Y, Zo)
             v2 = Vec3(Xi, Y, Zi)
@@ -34,6 +36,9 @@ class Pond(object):
             Xi -= factor_x
             Zo -= factor_z
             Zi += factor_z
+        out['min']['z'] = Zo
+        out['max']['z'] = Zi
+        return out
 
 
 
@@ -41,6 +46,7 @@ class Forest(object):
     BASE_PATH = os.path.dirname(__file__)
     RESOURCES_PATH = os.path.join(BASE_PATH, '..', '..', 'resources')
 
+    EXCLUDE_DISTANCE = 10
     TREE_GAP = 15
     TREE_RANDOM_GAP = range(-3, 3)
     TREE_DATA = {}
@@ -69,6 +75,7 @@ class Forest(object):
     @classmethod
     def is_within_excluded(cls, v=None, exclude=None):
         for ex in exclude:
-            if ex['Xo'] <= v.x <= ex['Xe'] and ex['Zo'] <= v.z <= ex['Ze']:
+            if ex['min']['x'] - cls.EXCLUDE_DISTANCE <= v.x <= ex['max']['x'] + cls.EXCLUDE_DISTANCE \
+                    and ex['min']['z'] - cls.EXCLUDE_DISTANCE <= v.z <= ex['max']['z'] + cls.EXCLUDE_DISTANCE:
                 return True
         return False
