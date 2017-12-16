@@ -51,7 +51,7 @@ class Forest(object):
     TREE_RANDOM_GAP = range(-3, 3)
     TREE_DATA = {}
     TREE_PATH = os.path.join(RESOURCES_PATH, 'scans', 'trees')
-    TREES = ['tree001.json', 'tree002.json']
+    TREES = ['tree001.json', 'tree001.json', 'tree002_fixed.json']
     for t in TREES:
         TREE_DATA[t] = CoordinateUtils.read_data_from_file((os.path.join(TREE_PATH, t)))
 
