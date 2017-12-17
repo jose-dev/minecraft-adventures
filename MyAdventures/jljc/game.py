@@ -4,6 +4,7 @@ from mcpi.vec3 import Vec3
 import os
 import random
 import time
+import datetime
 
 from jljc.printer_3d.coordinate_utils import CoordinateUtils
 from jljc.printer_3d.scan_print_3d import ScanPrint3D
@@ -12,7 +13,7 @@ from jljc.printer_3d.scan_print_3d import ScanPrint3D
 mc = minecraft.Minecraft.create()
 scanner = ScanPrint3D(mc)
 
-
+BLOCK_ID = block.DIAMOND_BLOCK.id
 BASE_PATH = os.path.dirname(__file__)
 RESOURCES_PATH = os.path.join(BASE_PATH, '..', 'resources', 'scans', 'game')
 DATA_FILES = {
@@ -25,9 +26,94 @@ for d in DATA_FILES:
 
 
 
+POTENTIAL_HIDDEN_DIAMONDS = {
+    '1': {'where': 'village', 'coord': Vec3(20, 0, 56)},
+    '2': {'where': 'village', 'coord': Vec3(1, 0, 78)},
+}
+
+
+def choose_hidden_diamonds(n=2):
+    return POTENTIAL_HIDDEN_DIAMONDS
+
+
+def place_hidden_diamonds(data):
+    for i in data:
+        v = data[i]['coord']
+        mc.setBlock(v.x, v.y, v.z, BLOCK_ID, 0)
+
+
+def _explode_box(obj, what='city'):
+    STEPS = 1
+    xo = obj['box']['min']['x']
+    xe = obj['box']['max']['x']
+    zo = obj['box']['min']['z']
+    ze = obj['box']['max']['z']
+    number_of_levels = 1 if 'levels' not in obj else obj['levels']
+    count = 1
+    bomb = 0
+    gap_y = 4
+    for x in range(xo, xe):
+        for z in range(zo, ze):
+            if count % STEPS == 0:
+                b = block.TNT.id if bomb % 4 == 0 else block.REDSTONE_TORCH_ACTIVE.id
+                for i in range(0, number_of_levels):
+                    y = i * gap_y + 1
+                    if y > 1:
+                        mc.setBlock(x, y - 1, z, block.SANDSTONE.id, 0)
+                    mc.setBlock(x, y, z, b, 0)
+                bomb += 1
+            count += 1
+
+
+def _explode_coord(obj, what='city'):
+    STEPS = 1
+    count = 1
+    bomb = 0
+    for coord in obj['data']:
+        point = coord['coord']
+        if count % STEPS == 0 and coord['block']['id'] != 0:
+            b = block.TNT.id if bomb % 5 == 0 else block.REDSTONE_TORCH_ACTIVE.id
+            mc.setBlock(point['x'], point['y'] + 1, point['z'], b, 0)
+            bomb += 1
+        count += 1
+
+
+
+def explode(data, what='city'):
+    print("Explode stuff...")
+
+    mc.postToChat("adding activated TNT...")
+    for obj in data:
+        if 'data' in obj:
+            SLEEP_BETWEEN_OBJECTS_SECONDS = 10
+            _explode_coord(obj)
+        else:
+            SLEEP_BETWEEN_OBJECTS_SECONDS = 20
+            _explode_box(obj)
+        time.sleep(SLEEP_BETWEEN_OBJECTS_SECONDS)
+
+
+def diamond_quest_was_successful(diamonds, no_seconds=30):
+    start = datetime.datetime.now()
+    found = {}
+    while (datetime.datetime.now()-start).total_seconds() <= no_seconds and len(diamonds) > len(found):
+        # check how many diamonds are still out there
+        for i in diamonds:
+            if i in found:
+                continue
+            v = diamonds[i]['coord']
+            if mc.getBlock(v.x, v.y, v.z) != BLOCK_ID:
+                found[i] = 1
+        time.sleep(.5)
+        seconds_remaining = int(no_seconds - (datetime.datetime.now()-start).total_seconds())
+        mc.postToChat("Seconds remaining: {} - Diamonds remaining: {}".format(str(seconds_remaining),
+                                                                              str(len(diamonds) - len(found))))
+    return len(diamonds) == len(found)
+
+
+
 def main():
 
-    exclude = DATA['city']
 
     #exclude = []
 
@@ -71,56 +157,29 @@ def main():
     #exclude.append(mother_data)
 
 
-    time.sleep(10)
-    pos = mc.player.getTilePos()
-    mc.postToChat("x: {0} y: {1} z: {2}".format(str(pos.x),
-                                                str(pos.y),
-                                                str(pos.z)))
+    mc.postToChat("Hidding the diamonds ...")
+    diamonds = choose_hidden_diamonds()
+    place_hidden_diamonds(diamonds)
+
+    mc.postToChat("Let's search for the diamonds, the clock is ticking...")
+    all_found = diamond_quest_was_successful(diamonds, 10)
+    if all_found:
+        mc.postToChat("Well done - the city is saved - good-bye aliens...")
+        what_to_explode = DATA['spaceship_fleet']
+    else:
+        mc.postToChat("Oh no - get out quickly - the city is about to explode...")
+        what_to_explode = DATA['city']
 
 
+    #time.sleep(10)
+    #pos = mc.player.getTilePos()
+    #mc.postToChat("x: {0} y: {1} z: {2}".format(str(pos.x),
+    #                                            str(pos.y),
+    #                                            str(pos.z)))
 
-    print("Explode stuff...")
-    STEPS = 1
+    explode(what_to_explode)
 
-    mc.postToChat("adding activated TNT...")
-    for obj in exclude:
-        if 'data' in obj:
-            SLEEP_BETWEEN_OBJECTS_SECONDS = 10
 
-            count = 1
-            bomb = 0
-            for coord in obj['data']:
-                point = coord['coord']
-                if count % STEPS == 0 and coord['block']['id'] != 0:
-                    b = block.TNT.id if bomb % 5 == 0 else block.REDSTONE_TORCH_ACTIVE.id
-                    mc.setBlock(point['x'], point['y'] + 1, point['z'], b, 0)
-                    bomb += 1
-                count += 1
-        else:
-            SLEEP_BETWEEN_OBJECTS_SECONDS = 20
-
-            xo = obj['box']['min']['x']
-            xe = obj['box']['max']['x']
-            zo = obj['box']['min']['z']
-            ze = obj['box']['max']['z']
-            number_of_levels = 1 if 'levels' not in obj else obj['levels']
-            #print(number_of_levels)
-            count = 1
-            bomb = 0
-            gap_y = 4
-            for x in range(xo, xe):
-                for z in range(zo, ze):
-                    if count % STEPS == 0:
-                        b = block.TNT.id if bomb % 4 == 0 else block.REDSTONE_TORCH_ACTIVE.id
-                        for i in range(0, number_of_levels):
-                            y = i * gap_y + 1
-                            if y > 1:
-                                mc.setBlock(x, y - 1, z, block.SANDSTONE.id, 0)
-                            mc.setBlock(x, y, z, b, 0)
-                        bomb += 1
-                    count += 1
-
-        time.sleep(SLEEP_BETWEEN_OBJECTS_SECONDS)
 
 
 
