@@ -10,12 +10,14 @@ mc = minecraft.Minecraft.create()
 scanner = ScanPrint3D(mc)
 
 
+SPACESHIP_FLEET = 'spaceship_fleet_001.json'
+
 BASE_PATH = os.path.dirname(__file__)
 RESOURCES_PATH = os.path.join(BASE_PATH, '..', '..', 'resources', 'scans', 'spaceships')
 DATA_FILES = {
-    'command':  os.path.join(RESOURCES_PATH, 'command_ship_001.json'),
-    'explorer': os.path.join(RESOURCES_PATH, 'explorer_ship_001.json'),
-    'mother':   os.path.join(RESOURCES_PATH, 'mother_ship_001.json'),
+    'command':  os.path.join(RESOURCES_PATH, 'command_ship_002.json'),
+    'explorer': os.path.join(RESOURCES_PATH, 'explorer_ship_002.json'),
+    'mother':   os.path.join(RESOURCES_PATH, 'mother_ship_002.json'),
 }
 DATA = {}
 for d in DATA_FILES:
@@ -24,46 +26,7 @@ for d in DATA_FILES:
 
 
 def main():
-    """
-    TODO:
-
-    all the coordinates should be saved in a data structure
-    that can be shared between classes
-
-    :return:
-    """
-
-    exclude = []
-
-
-    ## build comand ship 1
-    x = -140
-    y = 40
-    z = 50
-    v = Vec3(x, y, z)
-    command_data = CoordinateUtils.shift_coordinates(DATA['command'], v)
-    scanner.print_3d(command_data)
-    exclude.append(command_data['box'])
-
-
-    ## build mother
-    x = -40
-    y = 40
-    z = 50
-    v = Vec3(x, y, z)
-    mother_data = CoordinateUtils.shift_coordinates(DATA['mother'], v)
-    scanner.print_3d(mother_data)
-    exclude.append(mother_data['box'])
-
-
-    ## build comand ship 2
-    x = 60
-    y = 40
-    z = 50
-    v = Vec3(x, y, z)
-    command_data = CoordinateUtils.shift_coordinates(DATA['command'], v)
-    scanner.print_3d(command_data)
-    exclude.append(command_data['box'])
+    coord_to_save = []
 
 
     ## build explorer ships
@@ -76,10 +39,41 @@ def main():
             v = Vec3(x, y, z)
             explorer_data = CoordinateUtils.shift_coordinates(DATA['explorer'], v)
             scanner.print_3d(explorer_data)
-            exclude.append(explorer_data['box'])
+            coord_to_save.append(explorer_data)
         x += gap_x
 
 
+    ## build comand ship 1
+    x = -140
+    y = 40
+    z = 50
+    v = Vec3(x, y, z)
+    command_data = CoordinateUtils.shift_coordinates(DATA['command'], v)
+    scanner.print_3d(command_data)
+    coord_to_save.append(command_data)
+
+
+    ## build comand ship 2
+    x = 60
+    y = 40
+    z = 50
+    v = Vec3(x, y, z)
+    command_data = CoordinateUtils.shift_coordinates(DATA['command'], v)
+    scanner.print_3d(command_data)
+    coord_to_save.append(command_data)
+
+
+    ## build mother
+    x = -40
+    y = 40
+    z = 50
+    v = Vec3(x, y, z)
+    mother_data = CoordinateUtils.shift_coordinates(DATA['mother'], v)
+    scanner.print_3d(mother_data)
+    coord_to_save.append(mother_data)
+
+
+    CoordinateUtils.save_data_to_file(coord_to_save, SPACESHIP_FLEET)
 
 if __name__ == '__main__':
     main()
