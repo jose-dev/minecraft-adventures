@@ -16,6 +16,7 @@ scanner = ScanPrint3D(mc)
 BASE_PATH = os.path.dirname(__file__)
 RESOURCES_PATH = os.path.join(BASE_PATH, '..', 'resources', 'scans', 'game')
 DATA_FILES = {
+    'city':  os.path.join(RESOURCES_PATH, 'city_world_002.json'),
     'spaceship_fleet':  os.path.join(RESOURCES_PATH, 'spaceship_fleet_001.json'),
 }
 DATA = {}
@@ -26,7 +27,7 @@ for d in DATA_FILES:
 
 def main():
 
-    exclude = DATA['spaceship_fleet']
+    exclude = DATA['city']
 
     #exclude = []
 
@@ -80,32 +81,42 @@ def main():
 
     print("Explode stuff...")
     STEPS = 1
-    SLEEP_BETWEEN_OBJECTS_SECONDS = 10
 
     mc.postToChat("adding activated TNT...")
     for obj in exclude:
         if 'data' in obj:
+            SLEEP_BETWEEN_OBJECTS_SECONDS = 10
+
             count = 1
             bomb = 0
             for coord in obj['data']:
                 point = coord['coord']
                 if count % STEPS == 0 and coord['block']['id'] != 0:
-                    b = block.TNT.id if bomb % 3 == 0 else block.REDSTONE_TORCH_ACTIVE.id
+                    b = block.TNT.id if bomb % 5 == 0 else block.REDSTONE_TORCH_ACTIVE.id
                     mc.setBlock(point['x'], point['y'] + 1, point['z'], b, 0)
                     bomb += 1
                 count += 1
         else:
+            SLEEP_BETWEEN_OBJECTS_SECONDS = 20
+
             xo = obj['box']['min']['x']
             xe = obj['box']['max']['x']
             zo = obj['box']['min']['z']
             ze = obj['box']['max']['z']
+            number_of_levels = 1 if 'levels' not in obj else obj['levels']
+            #print(number_of_levels)
             count = 1
             bomb = 0
+            gap_y = 4
             for x in range(xo, xe):
                 for z in range(zo, ze):
                     if count % STEPS == 0:
-                        b = block.TNT.id if bomb % 3 == 0 else block.REDSTONE_TORCH_ACTIVE.id
-                        mc.setBlock(x, 1, z, b, 0)
+                        b = block.TNT.id if bomb % 4 == 0 else block.REDSTONE_TORCH_ACTIVE.id
+                        for i in range(0, number_of_levels):
+                            y = i * gap_y + 1
+                            if y > 1:
+                                mc.setBlock(x, y - 1, z, block.SANDSTONE.id, 0)
+                            mc.setBlock(x, y, z, b, 0)
                         bomb += 1
                     count += 1
 

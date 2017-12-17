@@ -11,6 +11,8 @@ mc = minecraft.Minecraft.create()
 scanner = ScanPrint3D(mc)
 
 
+CITY_WORLD = 'city_world_002.json'
+
 BASE_PATH = os.path.dirname(__file__)
 RESOURCES_PATH = os.path.join(BASE_PATH, '..', '..', 'resources')
 DATA_FILES = {
@@ -26,16 +28,9 @@ for d in DATA_FILES:
 
 
 def main():
-    """
-    TODO:
-
-    all the coordinates should be saved in a data structure
-    that can be shared between classes
-
-    :return:
-    """
 
     exclude = []
+    coord_to_save = []
 
     ## build Talia's mansion
     x = -140
@@ -45,8 +40,10 @@ def main():
     hill_data = CoordinateUtils.shift_coordinates(DATA['mansion_hill'], v)
     scanner.print_3d(hill_data)
     v = Vec3(x + 4, -5, z + 8)
-    scanner.print_3d(CoordinateUtils.shift_coordinates(DATA['talia_mansion'], v))
+    talia_mansion = CoordinateUtils.shift_coordinates(DATA['talia_mansion'], v)
+    scanner.print_3d(talia_mansion)
     exclude.append(hill_data['box'])
+    coord_to_save.append({'box': talia_mansion['box'], 'levels': 5})
 
 
     ## build pond
@@ -66,8 +63,10 @@ def main():
     hill_data = CoordinateUtils.shift_coordinates(DATA['mansion_hill'], v)
     scanner.print_3d(hill_data)
     v = Vec3(x + 4, -5, z + 8)
-    scanner.print_3d(CoordinateUtils.shift_coordinates(DATA['selina_mansion'], v))
+    selina_mansion = CoordinateUtils.shift_coordinates(DATA['selina_mansion'], v)
+    scanner.print_3d(selina_mansion)
     exclude.append(hill_data['box'])
+    coord_to_save.append({'box': selina_mansion['box'], 'levels': 5})
 
 
     ## build houses
@@ -80,6 +79,7 @@ def main():
         scanner.print_3d(house_data)
         z += 50
         exclude.append(house_data['box'])
+        coord_to_save.append({'box': house_data['box'], 'levels': 3})
 
 
     ## village
@@ -87,8 +87,14 @@ def main():
     Zo = 4
     Xe = 30
     Ze = 88
-    exclude.append({'min':{'x': Xo, 'y': 0, 'z': Zo},
-                    'max': {'x': Xe, 'y': 0, 'z': Ze}})
+    village = {'box': {'min':{'x': Xo, 'y': 0, 'z': Zo},
+                       'max': {'x': Xe, 'y': 0, 'z': Ze}}, 'levels': 1}
+    exclude.append(village['box'])
+    coord_to_save.append(village)
+
+
+    ## save city coordinates
+    CoordinateUtils.save_data_to_file(coord_to_save, CITY_WORLD)
 
 
     ## grow forest within world limits
@@ -97,6 +103,7 @@ def main():
     Zo = -4
     Ze = 320
     Forest.grow_forest(Xo, Xe, 0, Zo, Ze, exclude)
+
 
 
 if __name__ == '__main__':
