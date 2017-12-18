@@ -139,48 +139,14 @@ def diamond_quest_was_successful(diamonds, no_seconds=30):
 
 
 def main():
+    """
+    
+    TODO
 
+    the data within DATA_FILE should be level (e.g. 'village', 'selina_mansion', 'explorer', etc
+    so just one single obj can be selected for explosion (for testing purposes).
 
-    #exclude = []
-
-    ## village
-    #exclude.append({'box': {'min':{'x': -43, 'y': 0, 'z': 4},
-    #                        'max': {'x': 30, 'y': 0, 'z': 88}}})
-    #
-
-
-    ### build houses
-    #x = 40
-    #y = -9
-    #z = 120
-    #for i in range(0, 4):
-    #    v = Vec3(x, y, z)
-    #    house_data = CoordinateUtils.shift_coordinates(DATA['house'], v)
-    #    scanner.print_3d(house_data)
-    #    z += 50
-    #    exclude.append(house_data)
-
-
-    ### build explorer ships
-    #print("Build spaceship...")
-    #x = 0
-    #y = 40
-    #z = 100
-    #v = Vec3(x, y, z)
-    #explorer_data = CoordinateUtils.shift_coordinates(DATA['explorer'], v)
-    #scanner.print_3d(explorer_data)
-    #exclude.append(explorer_data)
-
-
-    ### build mother ships
-    #print("Build spaceship...")
-    #x = 40
-    #y = 40
-    #z = 100
-    #v = Vec3(x, y, z)
-    #mother_data = CoordinateUtils.shift_coordinates(DATA['mother'], v)
-    #scanner.print_3d(mother_data)
-    #exclude.append(mother_data)
+    """
 
 
     mc.postToChat("Hidding the diamonds ...")
@@ -196,16 +162,7 @@ def main():
         mc.postToChat("Oh no - get out quickly - the city is about to explode...")
         what_to_explode = DATA['city']
 
-
-    #time.sleep(10)
-    #pos = mc.player.getTilePos()
-    #mc.postToChat("x: {0} y: {1} z: {2}".format(str(pos.x),
-    #                                            str(pos.y),
-    #                                            str(pos.z)))
-
     explode(what_to_explode)
-
-
 
 
 
