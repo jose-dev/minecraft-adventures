@@ -5,6 +5,7 @@ import os
 import random
 import time
 import datetime
+import numpy
 
 from jljc.printer_3d.coordinate_utils import CoordinateUtils
 from jljc.printer_3d.scan_print_3d import ScanPrint3D
@@ -93,21 +94,46 @@ def explode(data, what='city'):
         time.sleep(SLEEP_BETWEEN_OBJECTS_SECONDS)
 
 
+def _euclidian_distance(va, vb):
+    a = numpy.array((va.x, va.y, va.z))
+    b = numpy.array((vb.x, vb.y, vb.z))
+    return numpy.linalg.norm(a-b)
+
+
+def _distance_to_next_diamond(player_pos, diamond_pos):
+    return Vec3(diamond_pos.x - player_pos.x,
+                diamond_pos.y - player_pos.y,
+                diamond_pos.z - player_pos.z)
+
+
 def diamond_quest_was_successful(diamonds, no_seconds=30):
     start = datetime.datetime.now()
     found = {}
     while (datetime.datetime.now()-start).total_seconds() <= no_seconds and len(diamonds) > len(found):
-        # check how many diamonds are still out there
+        player_pos = mc.player.getTilePos()
+        shortest_distance = 999999999999
+        closest_diamond = None
         for i in diamonds:
             if i in found:
                 continue
             v = diamonds[i]['coord']
             if mc.getBlock(v.x, v.y, v.z) != BLOCK_ID:
                 found[i] = 1
-        time.sleep(.5)
-        seconds_remaining = int(no_seconds - (datetime.datetime.now()-start).total_seconds())
-        mc.postToChat("Seconds remaining: {} - Diamonds remaining: {}".format(str(seconds_remaining),
-                                                                              str(len(diamonds) - len(found))))
+                mc.postToChat("Diamonds remaining: {}".format(str(len(diamonds) - len(found))))
+            else:
+                dist = _euclidian_distance(player_pos, v)
+                if shortest_distance > dist:
+                    shortest_distance = dist
+                    closest_diamond = i
+        if len(diamonds) > len(found):
+            pos_to_next_diamond = _distance_to_next_diamond(player_pos, diamonds[closest_diamond]['coord'])
+            seconds_remaining = int(no_seconds - (datetime.datetime.now()-start).total_seconds())
+            mc.postToChat("Closest diamond x: {0} y: {1} z: {2} - Seconds remaining: {3}" \
+                          .format(str(pos_to_next_diamond.x),
+                                  str(pos_to_next_diamond.y),
+                                  str(pos_to_next_diamond.z),
+                                  str(seconds_remaining)))
+            time.sleep(.5)
     return len(diamonds) == len(found)
 
 
@@ -162,7 +188,7 @@ def main():
     place_hidden_diamonds(diamonds)
 
     mc.postToChat("Let's search for the diamonds, the clock is ticking...")
-    all_found = diamond_quest_was_successful(diamonds, 10)
+    all_found = diamond_quest_was_successful(diamonds, 60)
     if all_found:
         mc.postToChat("Well done - the city is saved - good-bye aliens...")
         what_to_explode = DATA['spaceship_fleet']
