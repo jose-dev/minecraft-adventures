@@ -6,6 +6,8 @@ import random
 import time
 import datetime
 import numpy
+import argparse
+
 
 from jljc.printer_3d.coordinate_utils import CoordinateUtils
 from jljc.printer_3d.scan_print_3d import ScanPrint3D
@@ -14,7 +16,8 @@ from jljc.printer_3d.scan_print_3d import ScanPrint3D
 mc = minecraft.Minecraft.create()
 scanner = ScanPrint3D(mc)
 
-NUMBER_OF_SECONDS = 15 * 60
+NUMBER_OF_MINUTES = 15
+NUMBER_OF_SECONDS = NUMBER_OF_MINUTES * 60
 NUMBER_OF_DIAMONDS = 7
 BLOCK_ID = block.DIAMOND_BLOCK.id
 BASE_PATH = os.path.dirname(__file__)
@@ -187,7 +190,7 @@ def diamond_quest_was_successful(diamonds, no_seconds=30):
 
 
 
-def main():
+def play():
     """
 
     TODO
@@ -215,6 +218,19 @@ def main():
 
 
 
-
 if __name__ == '__main__':
-    main()
+    ## parsing arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-m", "--number_minutes", help="Number of minutes the search will last",
+                        type=float, default=NUMBER_OF_MINUTES)
+    parser.add_argument("-d", "--number_diamonds", help="Number of diamonds to search for",
+                        type=int, default=NUMBER_OF_DIAMONDS)
+    parser.add_argument("-p", "--multiplayer", help="Multiplayer mode", action="store_true")
+    args = parser.parse_args()
+
+    ## vaidatig arguments
+    NUMBER_OF_SECONDS = int(args.number_minutes * 60)
+    NUMBER_OF_DIAMONDS = args.number_diamonds
+
+    ## play game
+    play()
