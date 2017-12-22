@@ -40,6 +40,7 @@ def main():
             explorer_data = CoordinateUtils.shift_coordinates(DATA['explorer'], v)
             scanner.print_3d(explorer_data)
             coord_to_save.append(explorer_data)
+            explorer_data['name'] = 'explorer'
         x += gap_x
 
 
@@ -50,6 +51,7 @@ def main():
     v = Vec3(x, y, z)
     command_data = CoordinateUtils.shift_coordinates(DATA['command'], v)
     scanner.print_3d(command_data)
+    command_data['name'] = 'command'
     coord_to_save.append(command_data)
 
 
@@ -60,6 +62,7 @@ def main():
     v = Vec3(x, y, z)
     command_data = CoordinateUtils.shift_coordinates(DATA['command'], v)
     scanner.print_3d(command_data)
+    command_data['name'] = 'command'
     coord_to_save.append(command_data)
 
 
@@ -70,6 +73,7 @@ def main():
     v = Vec3(x, y, z)
     mother_data = CoordinateUtils.shift_coordinates(DATA['mother'], v)
     scanner.print_3d(mother_data)
+    mother_data['name'] = 'mother'
     coord_to_save.append(mother_data)
 
 

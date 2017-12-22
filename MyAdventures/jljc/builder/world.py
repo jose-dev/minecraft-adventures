@@ -43,7 +43,7 @@ def main():
     talia_mansion = CoordinateUtils.shift_coordinates(DATA['talia_mansion'], v)
     scanner.print_3d(talia_mansion)
     exclude.append(hill_data['box'])
-    coord_to_save.append({'box': talia_mansion['box'], 'levels': 5})
+    coord_to_save.append({'box': talia_mansion['box'], 'levels': 5, 'name': 'talia_mansion'})
 
 
     ## build pond
@@ -66,7 +66,7 @@ def main():
     selina_mansion = CoordinateUtils.shift_coordinates(DATA['selina_mansion'], v)
     scanner.print_3d(selina_mansion)
     exclude.append(hill_data['box'])
-    coord_to_save.append({'box': selina_mansion['box'], 'levels': 5})
+    coord_to_save.append({'box': selina_mansion['box'], 'levels': 5, 'name': 'selina_mansion'})
 
 
     ## build houses
@@ -79,7 +79,7 @@ def main():
         scanner.print_3d(house_data)
         z += 50
         exclude.append(house_data['box'])
-        coord_to_save.append({'box': house_data['box'], 'levels': 3})
+        coord_to_save.append({'box': house_data['box'], 'levels': 3, 'name': 'houses'})
 
 
     ## village
@@ -88,7 +88,7 @@ def main():
     Xe = 30
     Ze = 88
     village = {'box': {'min':{'x': Xo, 'y': 0, 'z': Zo},
-                       'max': {'x': Xe, 'y': 0, 'z': Ze}}, 'levels': 1}
+                       'max': {'x': Xe, 'y': 0, 'z': Ze}}, 'levels': 1, 'name': 'village'}
     exclude.append(village['box'])
     coord_to_save.append(village)
 

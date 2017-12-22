@@ -75,6 +75,64 @@ POTENTIAL_HIDDEN_DIAMONDS = {
     '40': {'where': 'pond', 'coord': Vec3(13, 0, 222)},
     '41': {'where': 'pond', 'coord': Vec3(-4, -1, 209)},
     '42': {'where': 'pond', 'coord': Vec3(-41, 0, 178)},
+    '43': {'where': 'forest', 'coord': Vec3(67, 0, 46)},
+    '44': {'where': 'forest', 'coord': Vec3(89, 0, 53)},
+    '45': {'where': 'forest', 'coord': Vec3(62, 28, 95)},
+    '46': {'where': 'houses', 'coord': Vec3(72, 0, 125)},
+    '47': {'where': 'houses', 'coord': Vec3(48, 2, 127)},
+    '48': {'where': 'houses', 'coord': Vec3(64, 1, 129)},
+    '49': {'where': 'houses', 'coord': Vec3(55, 5, 130)},
+    '50': {'where': 'houses', 'coord': Vec3(57, 5, 131)},
+    '51': {'where': 'forest', 'coord': Vec3(32, 0, 153)},
+    '52': {'where': 'houses', 'coord': Vec3(54, 9, 178)},
+    '53': {'where': 'houses', 'coord': Vec3(55, 9, 183)},
+    '54': {'where': 'houses', 'coord': Vec3(49, 1, 181)},
+    '55': {'where': 'houses', 'coord': Vec3(66, -1, 173)},
+    '56': {'where': 'houses', 'coord': Vec3(63, -3, 180)},
+    '57': {'where': 'houses', 'coord': Vec3(43, -3, 179)},
+    '58': {'where': 'houses', 'coord': Vec3(62, 5, 181)},
+    '59': {'where': 'houses', 'coord': Vec3(61, 5, 183)},
+    '60': {'where': 'houses', 'coord': Vec3(53, 5, 177)},
+    '61': {'where': 'houses', 'coord': Vec3(44, 6, 180)},
+    '62': {'where': 'forest', 'coord': Vec3(53, 0, 210)},
+    '63': {'where': 'forest', 'coord': Vec3(65, 12, 213)},
+    '64': {'where': 'houses', 'coord': Vec3(68, 0, 232)},
+    '65': {'where': 'houses', 'coord': Vec3(66, 9, 229)},
+    '66': {'where': 'forest', 'coord': Vec3(36, 11, 226)},
+    '67': {'where': 'houses', 'coord': Vec3(38, 0, 225)},
+    '68': {'where': 'houses', 'coord': Vec3(43, 1, 230)},
+    '69': {'where': 'houses', 'coord': Vec3(60, 1, 231)},
+    '70': {'where': 'houses', 'coord': Vec3(53, -3, 226)},
+    '71': {'where': 'houses', 'coord': Vec3(63, -3, 228)},
+    '72': {'where': 'houses', 'coord': Vec3(65, 3, 223)},
+    '73': {'where': 'houses', 'coord': Vec3(66, 5, 230)},
+    '74': {'where': 'houses', 'coord': Vec3(57, 5, 231)},
+    '75': {'where': 'houses', 'coord': Vec3(46, 5, 227)},
+    '76': {'where': 'houses', 'coord': Vec3(46, 5, 230)},
+    '77': {'where': 'forest', 'coord': Vec3(77, 2, 256)},
+    '78': {'where': 'forest', 'coord': Vec3(85, 0, 258)},
+    '79': {'where': 'forest', 'coord': Vec3(48, 0, 263)},
+    '80': {'where': 'houses', 'coord': Vec3(53, 9, 279)},
+    '81': {'where': 'houses', 'coord': Vec3(68, 0, 276)},
+    '82': {'where': 'houses', 'coord': Vec3(64, 0, 283)},
+    '83': {'where': 'houses', 'coord': Vec3(40, 0, 280)},
+    '84': {'where': 'houses', 'coord': Vec3(48, 2, 278)},
+    '85': {'where': 'houses', 'coord': Vec3(49, 1, 281)},
+    '86': {'where': 'houses', 'coord': Vec3(63, 1, 276)},
+    '87': {'where': 'houses', 'coord': Vec3(66, -1, 273)},
+    '88': {'where': 'houses', 'coord': Vec3(65, -3, 279)},
+    '89': {'where': 'houses', 'coord': Vec3(43, -3, 274)},
+    '90': {'where': 'houses', 'coord': Vec3(66, 3, 273)},
+    '91': {'where': 'houses', 'coord': Vec3(61, 5, 281)},
+    '92': {'where': 'houses', 'coord': Vec3(61, 5, 273)},
+    '93': {'where': 'houses', 'coord': Vec3(47, 5, 281)},
+    '94': {'where': 'forest', 'coord': Vec3(35, 0, 299)},
+    '95': {'where': 'forest', 'coord': Vec3(41, 4, 314)},
+    '96': {'where': 'forest', 'coord': Vec3(32, 0, 317)},
+    '97': {'where': 'forest', 'coord': Vec3(30, 12, 315)},
+    '98': {'where': 'forest', 'coord': Vec3(23, 11, 301)},
+    '99': {'where': 'forest', 'coord': Vec3(13, 0, 291)},
+    '100': {'where': 'forest', 'coord': Vec3(-8, 0, 298)},
 
 }
 
@@ -195,8 +253,14 @@ def play():
 
     TODO
 
-    the data within DATA_FILE should be level (e.g. 'village', 'selina_mansion', 'explorer', etc
-    so just one single obj can be selected for explosion (for testing purposes).
+    - needs to recalculate all DATA FILES to include 'name'
+
+        the data within DATA_FILE should be level (e.g. 'village', 'selina_mansion', 'explorer', etc
+        so just one single obj can be selected for explosion (for testing purposes).
+
+
+    - implement name filtering for testing purposes (restrict both the things to explode
+      and the area to hold diamonds)
 
     """
 
@@ -225,10 +289,10 @@ if __name__ == '__main__':
                         type=float, default=NUMBER_OF_MINUTES)
     parser.add_argument("-d", "--number_diamonds", help="Number of diamonds to search for",
                         type=int, default=NUMBER_OF_DIAMONDS)
-    parser.add_argument("-p", "--multiplayer", help="Multiplayer mode", action="store_true")
+    #parser.add_argument("-p", "--multiplayer", help="Multiplayer mode", action="store_true")
     args = parser.parse_args()
 
-    ## vaidatig arguments
+    ## validatig arguments
     NUMBER_OF_SECONDS = int(args.number_minutes * 60)
     NUMBER_OF_DIAMONDS = args.number_diamonds
 
