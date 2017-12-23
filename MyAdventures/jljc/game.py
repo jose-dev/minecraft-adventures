@@ -23,8 +23,8 @@ BLOCK_ID = block.DIAMOND_BLOCK.id
 BASE_PATH = os.path.dirname(__file__)
 RESOURCES_PATH = os.path.join(BASE_PATH, '..', 'resources', 'scans', 'game')
 DATA_FILES = {
-    'city':  os.path.join(RESOURCES_PATH, 'city_world_003.json'),
-    'spaceship_fleet':  os.path.join(RESOURCES_PATH, 'spaceship_fleet_002.json'),
+    'city':  os.path.join(RESOURCES_PATH, 'xmas_2017_game_world_city.json'),
+    'spaceship_fleet':  os.path.join(RESOURCES_PATH, 'xmas_2017_game_world_spaceship_fleet.json'),
 }
 DATA = {}
 for d in DATA_FILES:
@@ -144,6 +144,7 @@ def choose_hidden_diamonds(n=NUMBER_OF_DIAMONDS):
         id = random.choice(ids)
         if id not in chosen:
             chosen[id] = POTENTIAL_HIDDEN_DIAMONDS[id]
+            print(chosen)
     return chosen
 
 
@@ -194,7 +195,9 @@ def explode(data):
     print("Explode stuff...")
 
     mc.postToChat("adding activated TNT...")
+    time.sleep(5)
     for obj in data:
+        mc.postToChat("exploding a {}".format(obj['name']))
         if 'data' in obj:
             SLEEP_BETWEEN_OBJECTS_SECONDS = 10
             _explode_coord(obj)
@@ -272,7 +275,7 @@ def _select_for_test_dict(data, value_name=None, key_name=None):
 
 def play():
     mc.postToChat("Hidding the diamonds ...")
-    diamonds = choose_hidden_diamonds()
+    diamonds = choose_hidden_diamonds(NUMBER_OF_DIAMONDS)
     place_hidden_diamonds(diamonds)
 
     mc.postToChat("Let's search for the diamonds, the clock is ticking...")
