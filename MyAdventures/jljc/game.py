@@ -301,17 +301,12 @@ if __name__ == '__main__':
     ## validatig arguments
     NUMBER_OF_SECONDS = int(args.number_minutes * 60)
     NUMBER_OF_DIAMONDS = args.number_diamonds
-    
+
+    ## extract only a sub-set of data if running in test mode
     if args.test:
         POTENTIAL_HIDDEN_DIAMONDS = select_for_test(POTENTIAL_HIDDEN_DIAMONDS, 'village')
         DATA['city'] = select_for_test(DATA['city'], 'village')
         DATA['spaceship_fleet'] = select_for_test(DATA['spaceship_fleet'], 'mother')
-
-    import pprint
-    pprint.pprint(POTENTIAL_HIDDEN_DIAMONDS)
-    pprint.pprint(DATA['city'])
-    pprint.pprint(DATA['spaceship_fleet'])
-
 
     ## play game
     play()
