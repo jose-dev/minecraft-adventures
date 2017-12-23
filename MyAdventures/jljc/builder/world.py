@@ -11,7 +11,7 @@ mc = minecraft.Minecraft.create()
 scanner = ScanPrint3D(mc)
 
 
-CITY_WORLD = 'city_world_002.json'
+CITY_WORLD = 'city_world_003.json'
 
 BASE_PATH = os.path.dirname(__file__)
 RESOURCES_PATH = os.path.join(BASE_PATH, '..', '..', 'resources')

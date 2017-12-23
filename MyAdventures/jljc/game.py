@@ -23,8 +23,8 @@ BLOCK_ID = block.DIAMOND_BLOCK.id
 BASE_PATH = os.path.dirname(__file__)
 RESOURCES_PATH = os.path.join(BASE_PATH, '..', 'resources', 'scans', 'game')
 DATA_FILES = {
-    'city':  os.path.join(RESOURCES_PATH, 'city_world_002.json'),
-    'spaceship_fleet':  os.path.join(RESOURCES_PATH, 'spaceship_fleet_001.json'),
+    'city':  os.path.join(RESOURCES_PATH, 'city_world_003.json'),
+    'spaceship_fleet':  os.path.join(RESOURCES_PATH, 'spaceship_fleet_002.json'),
 }
 DATA = {}
 for d in DATA_FILES:
@@ -153,7 +153,7 @@ def place_hidden_diamonds(data):
         mc.setBlock(v.x, v.y, v.z, BLOCK_ID, 0)
 
 
-def _explode_box(obj, what='city'):
+def _explode_box(obj):
     STEPS = 1
     xo = obj['box']['min']['x']
     xe = obj['box']['max']['x']
@@ -176,7 +176,7 @@ def _explode_box(obj, what='city'):
             count += 1
 
 
-def _explode_coord(obj, what='city'):
+def _explode_coord(obj):
     STEPS = 1
     count = 1
     bomb = 0
@@ -190,7 +190,7 @@ def _explode_coord(obj, what='city'):
 
 
 
-def explode(data, what='city'):
+def explode(data):
     print("Explode stuff...")
 
     mc.postToChat("adding activated TNT...")
@@ -247,24 +247,30 @@ def diamond_quest_was_successful(diamonds, no_seconds=30):
     return len(diamonds) == len(found)
 
 
+def select_for_test(data, value_name=None, key_name=None):
+    if type(data) is dict:
+        return _select_for_test_dict(data, value_name, 'where')
+    else:
+        return _select_for_test_array(data, value_name, 'name')
+
+
+def _select_for_test_array(data, value_name=None, key_name='name'):
+    selected = []
+    for row in data:
+        if key_name in row and row[key_name] == value_name:
+            selected.append(row)
+    return selected
+
+
+def _select_for_test_dict(data, value_name=None, key_name=None):
+    selected = {}
+    for k in data:
+        if key_name in data[k] and data[k][key_name] == value_name:
+            selected[k] = data[k]
+    return selected
+
 
 def play():
-    """
-
-    TODO
-
-    - needs to recalculate all DATA FILES to include 'name'
-
-        the data within DATA_FILE should be level (e.g. 'village', 'selina_mansion', 'explorer', etc
-        so just one single obj can be selected for explosion (for testing purposes).
-
-
-    - implement name filtering for testing purposes (restrict both the things to explode
-      and the area to hold diamonds)
-
-    """
-
-
     mc.postToChat("Hidding the diamonds ...")
     diamonds = choose_hidden_diamonds()
     place_hidden_diamonds(diamonds)
@@ -277,7 +283,6 @@ def play():
     else:
         mc.postToChat("Oh no - get out quickly - the city is about to explode...")
         what_to_explode = DATA['city']
-
     explode(what_to_explode)
 
 
@@ -289,12 +294,24 @@ if __name__ == '__main__':
                         type=float, default=NUMBER_OF_MINUTES)
     parser.add_argument("-d", "--number_diamonds", help="Number of diamonds to search for",
                         type=int, default=NUMBER_OF_DIAMONDS)
+    parser.add_argument("-t", "--test", help="Test mode", action="store_true")
     #parser.add_argument("-p", "--multiplayer", help="Multiplayer mode", action="store_true")
     args = parser.parse_args()
 
     ## validatig arguments
     NUMBER_OF_SECONDS = int(args.number_minutes * 60)
     NUMBER_OF_DIAMONDS = args.number_diamonds
+    
+    if args.test:
+        POTENTIAL_HIDDEN_DIAMONDS = select_for_test(POTENTIAL_HIDDEN_DIAMONDS, 'village')
+        DATA['city'] = select_for_test(DATA['city'], 'village')
+        DATA['spaceship_fleet'] = select_for_test(DATA['spaceship_fleet'], 'mother')
+
+    import pprint
+    pprint.pprint(POTENTIAL_HIDDEN_DIAMONDS)
+    pprint.pprint(DATA['city'])
+    pprint.pprint(DATA['spaceship_fleet'])
+
 
     ## play game
     play()

@@ -10,7 +10,7 @@ mc = minecraft.Minecraft.create()
 scanner = ScanPrint3D(mc)
 
 
-SPACESHIP_FLEET = 'spaceship_fleet_001.json'
+SPACESHIP_FLEET = 'spaceship_fleet_002.json'
 
 BASE_PATH = os.path.dirname(__file__)
 RESOURCES_PATH = os.path.join(BASE_PATH, '..', '..', 'resources', 'scans', 'spaceships')
