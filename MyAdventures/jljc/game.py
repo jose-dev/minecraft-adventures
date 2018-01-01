@@ -36,11 +36,11 @@ POTENTIAL_HIDDEN_DIAMONDS = {
     '1': {'where': 'village', 'coord': Vec3(20, 0, 56)},
     '2': {'where': 'village', 'coord': Vec3(1, 0, 78)},
     '3': {'where': 'village', 'coord': Vec3(-18, 1, 52)},
-    '4': {'where': 'village', 'coord': Vec3(-40, 10, 39)},
-    '5': {'where': 'village', 'coord': Vec3(-13, 5, 42)},
+    #'4': {'where': 'village', 'coord': Vec3(-40, 10, 39)},
+    #'5': {'where': 'village', 'coord': Vec3(-13, 5, 42)},
     '6': {'where': 'village', 'coord': Vec3(-24, 1, 37)},
     '7': {'where': 'forest', 'coord': Vec3(-70, 0, 18)},
-    '8': {'where': 'forest', 'coord': Vec3(-100, 13, 19)},
+    #'8': {'where': 'forest', 'coord': Vec3(-100, 13, 19)},
     '9': {'where': 'forest', 'coord': Vec3(-90, 0, 83)},
     '10': {'where': 'talia_mansion', 'coord': Vec3(-107, 13, 144)},
     '11': {'where': 'talia_mansion', 'coord': Vec3(-126, 13, 148)},
@@ -54,8 +54,8 @@ POTENTIAL_HIDDEN_DIAMONDS = {
     '19': {'where': 'talia_mansion', 'coord': Vec3(-123, 0, 143)},
     '20': {'where': 'talia_mansion', 'coord': Vec3(-107, 1, 144)},
     '21': {'where': 'forest', 'coord': Vec3(-130, 0, 193)},
-    '22': {'where': 'forest', 'coord': Vec3(-127, 11, 206)},
-    '23': {'where': 'selina_mansion', 'coord': Vec3(-115, 18, 249)},
+    #'22': {'where': 'forest', 'coord': Vec3(-127, 11, 206)},
+    #'23': {'where': 'selina_mansion', 'coord': Vec3(-115, 18, 249)},
     '24': {'where': 'selina_mansion', 'coord': Vec3(-129, 13, 236)},
     '25': {'where': 'selina_mansion', 'coord': Vec3(-116, 14, 254)},
     '26': {'where': 'selina_mansion', 'coord': Vec3(-113, 13, 254)},
@@ -77,7 +77,7 @@ POTENTIAL_HIDDEN_DIAMONDS = {
     '42': {'where': 'pond', 'coord': Vec3(-41, 0, 178)},
     '43': {'where': 'forest', 'coord': Vec3(67, 0, 46)},
     '44': {'where': 'forest', 'coord': Vec3(89, 0, 53)},
-    '45': {'where': 'forest', 'coord': Vec3(62, 28, 95)},
+    #'45': {'where': 'forest', 'coord': Vec3(62, 28, 95)},
     '46': {'where': 'houses', 'coord': Vec3(72, 0, 125)},
     '47': {'where': 'houses', 'coord': Vec3(48, 2, 127)},
     '48': {'where': 'houses', 'coord': Vec3(64, 1, 129)},
@@ -95,10 +95,10 @@ POTENTIAL_HIDDEN_DIAMONDS = {
     '60': {'where': 'houses', 'coord': Vec3(53, 5, 177)},
     '61': {'where': 'houses', 'coord': Vec3(44, 6, 180)},
     '62': {'where': 'forest', 'coord': Vec3(53, 0, 210)},
-    '63': {'where': 'forest', 'coord': Vec3(65, 12, 213)},
+    #'63': {'where': 'forest', 'coord': Vec3(65, 12, 213)},
     '64': {'where': 'houses', 'coord': Vec3(68, 0, 232)},
     '65': {'where': 'houses', 'coord': Vec3(66, 9, 229)},
-    '66': {'where': 'forest', 'coord': Vec3(36, 11, 226)},
+    #'66': {'where': 'forest', 'coord': Vec3(36, 11, 226)},
     '67': {'where': 'houses', 'coord': Vec3(38, 0, 225)},
     '68': {'where': 'houses', 'coord': Vec3(43, 1, 230)},
     '69': {'where': 'houses', 'coord': Vec3(60, 1, 231)},
@@ -129,8 +129,8 @@ POTENTIAL_HIDDEN_DIAMONDS = {
     '94': {'where': 'forest', 'coord': Vec3(35, 0, 299)},
     '95': {'where': 'forest', 'coord': Vec3(41, 4, 314)},
     '96': {'where': 'forest', 'coord': Vec3(32, 0, 317)},
-    '97': {'where': 'forest', 'coord': Vec3(30, 12, 315)},
-    '98': {'where': 'forest', 'coord': Vec3(23, 11, 301)},
+    #'97': {'where': 'forest', 'coord': Vec3(30, 12, 315)},
+    #'98': {'where': 'forest', 'coord': Vec3(23, 11, 301)},
     '99': {'where': 'forest', 'coord': Vec3(13, 0, 291)},
     '100': {'where': 'forest', 'coord': Vec3(-8, 0, 298)},
 
@@ -218,6 +218,13 @@ def _distance_to_next_diamond(player_pos, diamond_pos):
                 diamond_pos.y - player_pos.y,
                 diamond_pos.z - player_pos.z)
 
+def _get_hits():
+    hits = []
+    events = mc.events.pollBlockHits()
+    for e in events:
+        hits.append(e.pos)
+    return hits
+
 
 def diamond_quest_was_successful(diamonds, no_seconds=30):
     start = datetime.datetime.now()
@@ -226,12 +233,14 @@ def diamond_quest_was_successful(diamonds, no_seconds=30):
         player_pos = mc.player.getTilePos()
         shortest_distance = 999999999999
         closest_diamond = None
+        hits = _get_hits()
         for i in diamonds:
             if i in found:
                 continue
             v = diamonds[i]['coord']
-            if mc.getBlock(v.x, v.y, v.z) != BLOCK_ID:
+            if v in hits:
                 found[i] = 1
+                mc.setBlock(v.x, v.y, v.z, block.AIR.id, 0)
                 mc.postToChat("Diamonds remaining: {}".format(str(len(diamonds) - len(found))))
             else:
                 dist = _euclidian_distance(player_pos, v)
@@ -240,11 +249,16 @@ def diamond_quest_was_successful(diamonds, no_seconds=30):
                     closest_diamond = i
         if len(diamonds) > len(found):
             pos_to_next_diamond = _distance_to_next_diamond(player_pos, diamonds[closest_diamond]['coord'])
+            diamonds_remaining = len(diamonds) - len(found)
             seconds_remaining = int(no_seconds - (datetime.datetime.now()-start).total_seconds())
-            mc.postToChat("Closest diamond x: {0} y: {1} z: {2} - Seconds remaining: {3}" \
+            #mc.postToChat("Diamonds remaining: {} - Seconds remaining: {}" \
+            #              .format(str(diamonds_remaining),
+            #                      str(seconds_remaining)))
+            mc.postToChat("Closest x: {0} y: {1} z: {2} - remaining d: {3} sec: {4}" \
                           .format(str(pos_to_next_diamond.x),
                                   str(pos_to_next_diamond.y),
                                   str(pos_to_next_diamond.z),
+                                  str(diamonds_remaining),
                                   str(seconds_remaining)))
             time.sleep(.5)
     return len(diamonds) == len(found)
