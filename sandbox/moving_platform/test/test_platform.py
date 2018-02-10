@@ -1,7 +1,7 @@
 import unittest
 import random
 
-from game.moving_platform import Platform, Plane
+from platform.moving_platform import Platform
 
 
 class TestPlatform(unittest.TestCase):
@@ -94,5 +94,3 @@ class TestPlatform(unittest.TestCase):
             result.move_blocks()
             self.assertEqual(10, len(result.get_block_positions()))
             self.assertEqual(len(result.get_block_positions()), len(list(set(result.get_block_positions()))))
-            print(result.get_block_positions())
-            print(result.get_block_directions())
