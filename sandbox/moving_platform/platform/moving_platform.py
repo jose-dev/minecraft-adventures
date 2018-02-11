@@ -16,15 +16,19 @@ class Plane(object):
     def z_boundaries(self):
         return self._z
 
+    @property
     def west_edge(self):
         return self._x[0]
 
+    @property
     def east_edge(self):
         return self._x[1]
 
+    @property
     def south_edge(self):
         return self._z[0]
 
+    @property
     def north_edge(self):
         return self._z[1]
 
@@ -42,8 +46,8 @@ class Platform(object):
 
     def _initialize_block_positions(self):
         block_positions = []
-        x_range = (self._plane.west_edge() + 1, self._plane.east_edge() - 1)
-        z_range = (self._plane.south_edge() + 1, self._plane.north_edge() - 1)
+        x_range = (self._plane.west_edge + 1, self._plane.east_edge - 1)
+        z_range = (self._plane.south_edge + 1, self._plane.north_edge - 1)
         while len(block_positions) < self._number_of_blocks:
             pos = (random.randint(*x_range), random.randint(*z_range))
             if pos not in block_positions:
@@ -67,8 +71,8 @@ class Platform(object):
         return pos in self._block_positions
 
     def block_within_plane(self, pos=None):
-        return self._plane.west_edge() < pos[0] < self._plane.east_edge() \
-               and self._plane.south_edge() < pos[1] < self._plane.north_edge()
+        return self._plane.west_edge < pos[0] < self._plane.east_edge \
+               and self._plane.south_edge < pos[1] < self._plane.north_edge
 
     def set_block_positions(self, block_positions):
         self._block_positions = block_positions
