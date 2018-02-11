@@ -10,16 +10,20 @@ HOW TO PLAY:
 ------------
 
     (1) --> set CREATIVE mode
+
         >gamemode 1 WoodieWooJr
         11:14:22 [INFO] CONSOLE: Set WoodieWooJr's game mode to CREATIVE mode
 
     (2) --> add a sword to inventory
 
     (3) --> set SURVIVAL mode
+
         >gamemode 0 WoodieWooJr
         11:14:17 [INFO] CONSOLE: Set WoodieWooJr's game mode to SURVIVAL mode
 
     (4) --> start python script and play :)
+
+        python LavaNightmare.py
 
 """
 

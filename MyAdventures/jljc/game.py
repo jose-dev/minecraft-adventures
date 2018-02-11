@@ -30,6 +30,8 @@ HOW TO PLAY:
 
     (4) --> start python script and play :)
 
+        python game.py
+
 """
 
 mc = minecraft.Minecraft.create()
