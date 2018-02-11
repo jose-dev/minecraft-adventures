@@ -34,13 +34,11 @@ class Plane(object):
 
 
 class Platform(object):
-    _plane = Plane()
-    _block_positions = []
-    _block_directions = []
-
-    def __init__(self, number_blocks=NUMBER_BLOCKS, plane=None, positions=None, directions=None):
+    def __init__(self, number_blocks=NUMBER_BLOCKS, block_size=1, plane=None, positions=None, directions=None):
+        self._block_size = block_size
         self._number_of_blocks = len(positions) if positions else number_blocks
         self._plane = plane if plane else Plane()
+        self._initialize_plane_edges()
         self.set_block_positions(positions or self._initialize_block_positions())
         self.set_block_directions(directions or self._initialize_block_directions())
 
@@ -61,6 +59,13 @@ class Platform(object):
         z = random.choice(possibilities) if x == 0 else 0
         return (x,z)
 
+    def _initialize_plane_edges(self):
+        padding = (self._block_size - 1) / 2
+        self._west_edge  = self._plane.west_edge + padding
+        self._east_edge  = self._plane.east_edge - padding
+        self._south_edge = self._plane.south_edge + padding
+        self._north_edge = self._plane.north_edge - padding
+
     def _initialize_block_directions(self):
         block_directions = []
         for pos in range(self._number_of_blocks):
@@ -71,8 +76,8 @@ class Platform(object):
         return pos in self._block_positions
 
     def block_within_plane(self, pos=None):
-        return self._plane.west_edge < pos[0] < self._plane.east_edge \
-               and self._plane.south_edge < pos[1] < self._plane.north_edge
+        return self._west_edge < pos[0] < self._east_edge \
+               and self._south_edge < pos[1] < self._north_edge
 
     def set_block_positions(self, block_positions):
         self._block_positions = block_positions

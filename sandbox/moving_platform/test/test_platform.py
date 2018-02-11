@@ -45,52 +45,65 @@ class TestPlatform(unittest.TestCase):
         self.assertEqual((1, 1), result)
         self.assertTrue(platform.block_within_plane(result))
 
+    def test_block_of_bigger_size_will_hit_the_walls_in_the_next_move(self):
+        platform = Platform(positions=[(2, 1)], directions=[(-1, 0)], block_size=3)
+        result = platform.calculate_new_position((2, 1), (-1, 0))
+        self.assertEqual((1, 1), result)
+        self.assertFalse(platform.block_within_plane(result))
+
     def test_a_single_block_moves_one_iteration_successfully(self):
-        result = Platform(positions=[(2, 1)], directions=[(-1, 0)])
-        result.move_blocks()
-        self.assertEqual(1, len(result.get_block_positions()))
-        self.assertTrue(result.block_position_exists((1, 1)))
-        self.assertListEqual([(1, 1)], result.get_block_positions())
-        self.assertListEqual([(-1, 0)], result.get_block_directions())
+        platform = Platform(positions=[(2, 1)], directions=[(-1, 0)])
+        platform.move_blocks()
+        self.assertEqual(1, len(platform.get_block_positions()))
+        self.assertTrue(platform.block_position_exists((1, 1)))
+        self.assertListEqual([(1, 1)], platform.get_block_positions())
+        self.assertListEqual([(-1, 0)], platform.get_block_directions())
 
     def test_a_single_block_moves_two_iterations_successfully(self):
-        result = Platform(positions=[(3, 1)], directions=[(-1, 0)])
+        platform = Platform(positions=[(3, 1)], directions=[(-1, 0)])
         for i in range(2):
-            result.move_blocks()
-        self.assertEqual(1, len(result.get_block_positions()))
-        self.assertTrue(result.block_position_exists((1, 1)))
-        self.assertListEqual([(1, 1)], result.get_block_positions())
-        self.assertListEqual([(-1, 0)], result.get_block_directions())
+            platform.move_blocks()
+        self.assertEqual(1, len(platform.get_block_positions()))
+        self.assertTrue(platform.block_position_exists((1, 1)))
+        self.assertListEqual([(1, 1)], platform.get_block_positions())
+        self.assertListEqual([(-1, 0)], platform.get_block_directions())
 
     def test_two_blocks_move_one_iteration_successfully(self):
-        result = Platform(positions=[(2, 1), (3, 2)], directions=[(-1, 0), (0, 1)])
-        result.move_blocks()
-        self.assertEqual(2, len(result.get_block_positions()))
-        self.assertTrue(result.block_position_exists((1, 1)))
-        self.assertTrue(result.block_position_exists((3, 3)))
-        self.assertListEqual([(1, 1), (3, 3)], result.get_block_positions())
-        self.assertListEqual([(-1, 0), (0, 1)], result.get_block_directions())
+        platform = Platform(positions=[(2, 1), (3, 2)], directions=[(-1, 0), (0, 1)])
+        platform.move_blocks()
+        self.assertEqual(2, len(platform.get_block_positions()))
+        self.assertTrue(platform.block_position_exists((1, 1)))
+        self.assertTrue(platform.block_position_exists((3, 3)))
+        self.assertListEqual([(1, 1), (3, 3)], platform.get_block_positions())
+        self.assertListEqual([(-1, 0), (0, 1)], platform.get_block_directions())
 
     def test_two_blocks_move_two_iterations_successfully(self):
-        result = Platform(positions=[(3, 1), (3, 2)], directions=[(-1, 0), (0, 1)])
+        platform = Platform(positions=[(3, 1), (3, 2)], directions=[(-1, 0), (0, 1)])
         for i in range(2):
-            result.move_blocks()
-        self.assertEqual(2, len(result.get_block_positions()))
-        self.assertTrue(result.block_position_exists((1, 1)))
-        self.assertTrue(result.block_position_exists((3, 4)))
-        self.assertListEqual([(1, 1), (3, 4)], result.get_block_positions())
-        self.assertListEqual([(-1, 0), (0, 1)], result.get_block_directions())
+            platform.move_blocks()
+        self.assertEqual(2, len(platform.get_block_positions()))
+        self.assertTrue(platform.block_position_exists((1, 1)))
+        self.assertTrue(platform.block_position_exists((3, 4)))
+        self.assertListEqual([(1, 1), (3, 4)], platform.get_block_positions())
+        self.assertListEqual([(-1, 0), (0, 1)], platform.get_block_directions())
 
     def test_two_blocks_move_30_iterations_successfully(self):
-        result = Platform(positions=[(3, 1), (3, 2)], directions=[(-1, 0), (0, 1)])
+        platform = Platform(positions=[(3, 1), (3, 2)], directions=[(-1, 0), (0, 1)])
         for i in range(30):
-            result.move_blocks()
-            self.assertEqual(2, len(result.get_block_positions()))
-            self.assertEqual(len(result.get_block_positions()), len(list(set(result.get_block_positions()))))
+            platform.move_blocks()
+            self.assertEqual(2, len(platform.get_block_positions()))
+            self.assertEqual(len(platform.get_block_positions()), len(list(set(platform.get_block_positions()))))
 
     def test_10_blocks_move_30_iterations_successfully(self):
-        result = Platform(number_blocks=10)
+        platform = Platform(number_blocks=10)
         for i in range(30):
-            result.move_blocks()
-            self.assertEqual(10, len(result.get_block_positions()))
-            self.assertEqual(len(result.get_block_positions()), len(list(set(result.get_block_positions()))))
+            platform.move_blocks()
+            self.assertEqual(10, len(platform.get_block_positions()))
+            self.assertEqual(len(platform.get_block_positions()), len(list(set(platform.get_block_positions()))))
+
+    def test_10_blocks_of_bigger_size_move_30_iterations_successfully(self):
+        platform = Platform(number_blocks=10, block_size=3)
+        for i in range(30):
+            platform.move_blocks()
+            self.assertEqual(10, len(platform.get_block_positions()))
+            self.assertEqual(len(platform.get_block_positions()), len(list(set(platform.get_block_positions()))))
