@@ -35,6 +35,7 @@ class Plane(object):
 
 class Platform(object):
     def __init__(self, number_blocks=NUMBER_BLOCKS, block_size=1, plane=None, positions=None, directions=None):
+        assert (block_size - 1) % 2 == 0, "Invalid block size"
         self._block_size = block_size
         self._number_of_blocks = len(positions) if positions else number_blocks
         self._plane = plane if plane else Plane()
