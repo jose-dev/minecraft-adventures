@@ -30,7 +30,7 @@ HOW TO PLAY:
 
     (4) --> start python script and play :)
 
-        python game.py
+        PYTHONPATH=/Users/josejimenez/Documents/minecraft/minecraft-adventures/MyAdventures python game.py
 
 """
 
