@@ -1,5 +1,6 @@
 import random
 import copy
+import math
 
 
 NUMBER_BLOCKS = 5
@@ -33,7 +34,7 @@ class Plane(object):
         return self._z[1]
 
 
-class Platform(object):
+class PlatformBase(object):
     def __init__(self, number_blocks=NUMBER_BLOCKS, block_size=1, plane=None, positions=None, directions=None):
         assert (block_size - 1) % 2 == 0, "Invalid block size"
         self._block_size = block_size
@@ -59,6 +60,10 @@ class Platform(object):
         x = random.randint(*possibilities)
         z = random.choice(possibilities) if x == 0 else 0
         return (x,z)
+
+    @classmethod
+    def change_block_direction(cls, current=None):
+        return cls.random_block_direction()
 
     def _initialize_plane_edges(self):
         padding = (self._block_size - 1) / 2
@@ -109,10 +114,42 @@ class Platform(object):
                     block_positions[i] = new_pos
                     has_moved = True
                 else:
-                    block_directions[i] = self.random_block_direction()
+                    block_directions[i] = self.change_block_direction(block_directions[i])
                 if counter >= 10:
                     break
         self.set_block_positions(block_positions)
         self.set_block_directions(block_directions)
 
 
+class Platform(PlatformBase):
+    pass
+
+
+class PlatformParallel(PlatformBase):
+    @classmethod
+    def change_block_direction(cls, current=None):
+        return tuple(-1 * i for i in current)
+
+    @staticmethod
+    def random_block_direction():
+        possibilities = [-1, 1]
+        x = random.randint(*possibilities)
+        z = 0
+        return (x,z)
+
+    def _initialize_block_positions(self):
+        block_positions = []
+        x_range = (self._plane.west_edge + 1, self._plane.east_edge - 1)
+        z_range = (self._plane.south_edge + 1, self._plane.north_edge - 1)
+
+        z_length = z_range[1] - z_range[0]
+        gap = math.ceil(z_length / self._number_of_blocks)
+        while len(block_positions) < self._number_of_blocks:
+            for i in range(len(z_range)):
+                z = z_range[i] + (gap * i)
+                pos = (random.randint(*x_range), z)
+                if pos not in block_positions:
+                    block_positions.append(pos)
+                if len(block_positions) == self._number_of_blocks:
+                    break
+        return block_positions
