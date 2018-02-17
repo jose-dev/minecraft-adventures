@@ -5,7 +5,7 @@ import copy
 NUMBER_BLOCKS = 5
 
 
-class PlaneBorder(object):
+class Plane(object):
     def __init__(self, x=[0, 10], z=[0, 10]):
         self._x = x
         self._z = z
@@ -38,7 +38,7 @@ class PlatformerBase(object):
         assert (block_size - 1) % 2 == 0, "Invalid block size"
         self._block_size = block_size
         self._number_of_blocks = len(positions) if positions else number_blocks
-        self._plane = plane if plane else PlaneBorder()
+        self._plane = plane if plane else Plane()
         self._initialize_plane_edges()
         self.set_block_positions(positions or self._initialize_block_positions())
         self.set_block_directions(directions or self._initialize_block_directions())

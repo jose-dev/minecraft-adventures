@@ -1,7 +1,7 @@
 import unittest
 import random
 
-from platform.moving_platform import ParallelPlatformer, PlaneBorder
+from platform.moving_platform import ParallelPlatformer, Plane
 
 
 class ParallelTestPlatformer(unittest.TestCase):
@@ -24,7 +24,7 @@ class ParallelTestPlatformer(unittest.TestCase):
         print(r.__dict__)
         r = ParallelPlatformer(number_blocks=3, block_size=3)
         print(r.__dict__)
-        r = ParallelPlatformer(number_blocks=1, block_size=5, plane=PlaneBorder([0, 7], [0, 7]))
+        r = ParallelPlatformer(number_blocks=1, block_size=5, plane=Plane([0, 7], [0, 7]))
         print(r.__dict__)
 
     def test_platform_requires_more_blocks_raises_error(self):
