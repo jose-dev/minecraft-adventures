@@ -1,16 +1,16 @@
 import unittest
 
-from platform.moving_platform import Plane
+from platform.moving_platform import PlaneBorder
 
 
-class TestPlane(unittest.TestCase):
+class TestPlaneBorder(unittest.TestCase):
     def test_default_plane(self):
-        result = Plane()
+        result = PlaneBorder()
         self.assertListEqual([0, 10], result.x_boundaries())
         self.assertListEqual([0, 10], result.z_boundaries())
 
     def test_custom_plane(self):
-        result = Plane(x=[0, 2], z=[3, 5])
+        result = PlaneBorder(x=[0, 2], z=[3, 5])
         self.assertListEqual([0, 2], result.x_boundaries())
         self.assertListEqual([3, 5], result.z_boundaries())
         self.assertEqual(0, result.west_edge)

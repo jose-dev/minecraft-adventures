@@ -30,7 +30,7 @@ import mcpi.block as block
 import mcpi.minecraftstuff as minecraftstuff
 from mcpi.vec3 import Vec3
 
-from platform.moving_platform import Plane, Platform
+from platform.moving_platform import PlaneBorder, Platformer
 
 
 # level
@@ -90,8 +90,8 @@ def theRiver(arenaPos, riverZPos):
 
 def the_platform(xz=None):
     block_id = block.WOOD_PLANKS.id
-    plane = Plane(x=xz[0], z=xz[1])
-    platform = Platform(number_blocks=NUMBER_BLOCKS, block_size=PLATFORM_BLOCK_SIZE, plane=plane)
+    plane = PlaneBorder(x=xz[0], z=xz[1])
+    platform = Platformer(number_blocks=NUMBER_BLOCKS, block_size=PLATFORM_BLOCK_SIZE, plane=plane)
 
     #create the platform shapes
     platform_shapes = []

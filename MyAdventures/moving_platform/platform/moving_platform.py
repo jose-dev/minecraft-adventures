@@ -5,7 +5,7 @@ import copy
 NUMBER_BLOCKS = 5
 
 
-class Plane(object):
+class PlaneBorder(object):
     def __init__(self, x=[0, 10], z=[0, 10]):
         self._x = x
         self._z = z
@@ -33,12 +33,12 @@ class Plane(object):
         return self._z[1]
 
 
-class PlatformBase(object):
+class PlatformerBase(object):
     def __init__(self, number_blocks=NUMBER_BLOCKS, block_size=1, plane=None, positions=None, directions=None):
         assert (block_size - 1) % 2 == 0, "Invalid block size"
         self._block_size = block_size
         self._number_of_blocks = len(positions) if positions else number_blocks
-        self._plane = plane if plane else Plane()
+        self._plane = plane if plane else PlaneBorder()
         self._initialize_plane_edges()
         self.set_block_positions(positions or self._initialize_block_positions())
         self.set_block_directions(directions or self._initialize_block_directions())
@@ -120,11 +120,35 @@ class PlatformBase(object):
         self.set_block_directions(block_directions)
 
 
-class Platform(PlatformBase):
+class Platformer(PlatformerBase):
     pass
 
 
-class PlatformParallel(PlatformBase):
+class StaticPlatformer(PlatformerBase):
+    def __init__(self, number_blocks=NUMBER_BLOCKS, block_size=1, plane=None, positions=None, directions=None):
+        super(StaticPlatformer, self).__init__(number_blocks=number_blocks, block_size=block_size,
+                                               plane=plane, positions=positions, directions=None)
+
+    @staticmethod
+    def calculate_new_position(position=None, direction=None):
+        return position
+
+    @staticmethod
+    def random_block_direction():
+        return None
+
+    @classmethod
+    def change_block_direction(cls, current=None):
+        return current
+
+    def _initialize_block_directions(self):
+        return []
+
+    def move_blocks(self):
+        pass
+
+
+class ParallelPlatformer(PlatformerBase):
     def _initialize_block_positions(self):
         block_positions = []
         x_range = (self._west_edge, self._east_edge)
@@ -152,7 +176,7 @@ class PlatformParallel(PlatformBase):
         assert (z_range[1] - block_positions[-1][1]) > edge_gap + 1, "Gap too big at the end"
 
         # set the rest of blocks
-        return super(PlatformParallel, self)._initialize_block_positions(block_positions)
+        return super(ParallelPlatformer, self)._initialize_block_positions(block_positions)
 
     @classmethod
     def change_block_direction(cls, current=None):
