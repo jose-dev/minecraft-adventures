@@ -4,7 +4,7 @@ import random
 from platform.moving_platform import ParallelPlatformer, PlaneBorder
 
 
-class TestPlatformParallel(unittest.TestCase):
+class ParallelTestPlatformer(unittest.TestCase):
     def setUp(self):
         random.seed(13)
 

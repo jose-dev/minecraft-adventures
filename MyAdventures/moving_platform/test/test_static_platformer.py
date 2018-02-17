@@ -4,7 +4,7 @@ import random
 from platform.moving_platform import StaticPlatformer
 
 
-class TestStaticPlatform(unittest.TestCase):
+class TestStaticPlatformer(unittest.TestCase):
     def setUp(self):
         random.seed(13)
 
