@@ -1,7 +1,8 @@
 import unittest
 import random
 
-from platform.moving_platform import ParallelPlatformer, Plane
+from platform.moving_platform import ParallelPlatformer
+from platform.plane import Plane
 
 
 class ParallelTestPlatformer(unittest.TestCase):

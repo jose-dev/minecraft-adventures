@@ -1,6 +1,6 @@
 import unittest
 
-from platform.moving_platform import Plane
+from platform.plane import Plane
 
 
 class TestPlane(unittest.TestCase):
