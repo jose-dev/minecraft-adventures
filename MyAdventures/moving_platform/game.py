@@ -1,9 +1,3 @@
-# Adventure 9: CraftyCrossing.py
-
-# From the book: "Adventures in Minecraft"
-# written by David Whale and Martin O'Hanlon, Wiley, 2014
-# http://eu.wiley.com/WileyCDA/WileyTitle/productCd-111894691X.html
-
 """
 
 HOW TO PLAY:

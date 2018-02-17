@@ -1,6 +1,5 @@
 import random
 import copy
-import math
 
 
 NUMBER_BLOCKS = 5
@@ -44,10 +43,10 @@ class PlatformBase(object):
         self.set_block_positions(positions or self._initialize_block_positions())
         self.set_block_directions(directions or self._initialize_block_directions())
 
-    def _initialize_block_positions(self):
-        block_positions = []
-        x_range = (self._plane.west_edge + 1, self._plane.east_edge - 1)
-        z_range = (self._plane.south_edge + 1, self._plane.north_edge - 1)
+    def _initialize_block_positions(self, already=None):
+        block_positions = already or []
+        x_range = (self._west_edge, self._east_edge)
+        z_range = (self._south_edge, self._north_edge)
         while len(block_positions) < self._number_of_blocks:
             pos = (random.randint(*x_range), random.randint(*z_range))
             if pos not in block_positions:
@@ -66,7 +65,7 @@ class PlatformBase(object):
         return cls.random_block_direction()
 
     def _initialize_plane_edges(self):
-        padding = (self._block_size - 1) / 2
+        padding = 1 + (self._block_size - 1) / 2
         self._west_edge  = self._plane.west_edge + padding
         self._east_edge  = self._plane.east_edge - padding
         self._south_edge = self._plane.south_edge + padding
@@ -82,8 +81,8 @@ class PlatformBase(object):
         return pos in self._block_positions
 
     def block_within_plane(self, pos=None):
-        return self._west_edge < pos[0] < self._east_edge \
-               and self._south_edge < pos[1] < self._north_edge
+        return self._west_edge <= pos[0] <= self._east_edge \
+               and self._south_edge <= pos[1] <= self._north_edge
 
     def set_block_positions(self, block_positions):
         self._block_positions = block_positions
@@ -126,6 +125,35 @@ class Platform(PlatformBase):
 
 
 class PlatformParallel(PlatformBase):
+    def _initialize_block_positions(self):
+        block_positions = []
+        x_range = (self._west_edge, self._east_edge)
+        z_range = (self._south_edge, self._north_edge)
+        if z_range[0] + 1 > z_range[1]:
+            z_range= (z_range[0] + 1, z_range[1])
+        if z_range[0] + 1 > z_range[1]:
+            z_range= (z_range[0], z_range[1] - 1)
+
+        print("here...")
+        print(z_range)
+
+        # set initial blocks
+        z_length = z_range[1] - z_range[0]
+        edge_gap = int((self._block_size - 1) / 2)
+        jump = self._block_size + 1
+        for z in range(z_range[0], z_range[1], jump):
+            pos = (random.randint(*x_range), z)
+            if pos not in block_positions:
+                block_positions.append(pos)
+            assert len(block_positions) <= self._number_of_blocks, "Not enough blocks"
+        print(block_positions)
+        print((z_range[1] - block_positions[-1][1]))
+        print(edge_gap)
+        assert (z_range[1] - block_positions[-1][1]) > edge_gap + 1, "Gap too big at the end"
+
+        # set the rest of blocks
+        return super(PlatformParallel, self)._initialize_block_positions(block_positions)
+
     @classmethod
     def change_block_direction(cls, current=None):
         return tuple(-1 * i for i in current)
@@ -136,20 +164,3 @@ class PlatformParallel(PlatformBase):
         x = random.randint(*possibilities)
         z = 0
         return (x,z)
-
-    def _initialize_block_positions(self):
-        block_positions = []
-        x_range = (self._plane.west_edge + 1, self._plane.east_edge - 1)
-        z_range = (self._plane.south_edge + 1, self._plane.north_edge - 1)
-
-        z_length = z_range[1] - z_range[0]
-        gap = math.ceil(z_length / self._number_of_blocks)
-        while len(block_positions) < self._number_of_blocks:
-            for i in range(len(z_range)):
-                z = z_range[i] + (gap * i)
-                pos = (random.randint(*x_range), z)
-                if pos not in block_positions:
-                    block_positions.append(pos)
-                if len(block_positions) == self._number_of_blocks:
-                    break
-        return block_positions

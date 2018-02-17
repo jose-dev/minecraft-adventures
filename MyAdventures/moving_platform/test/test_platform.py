@@ -19,7 +19,7 @@ class TestPlatform(unittest.TestCase):
         self.assertEqual(len(result.get_block_positions()), len(list(set(result.get_block_positions()))))
         self.assertEqual(len(result.get_block_positions()), len(result.get_block_directions()))
 
-    def test_platform_requires_odd_block_sizes(self):
+    def test_platform_requires_odd_block_sizes_raises_error(self):
         try:
             Platform(block_size=2)
             self.assertTrue(False)
