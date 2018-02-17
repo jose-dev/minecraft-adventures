@@ -43,16 +43,6 @@ class PlatformerBase(object):
         self.set_block_positions(positions or self._initialize_block_positions())
         self.set_block_directions(directions or self._initialize_block_directions())
 
-    def _initialize_block_positions(self, already=None):
-        block_positions = already or []
-        x_range = (self._west_edge, self._east_edge)
-        z_range = (self._south_edge, self._north_edge)
-        while len(block_positions) < self._number_of_blocks:
-            pos = (random.randint(*x_range), random.randint(*z_range))
-            if pos not in block_positions:
-                block_positions.append(pos)
-        return block_positions
-
     @staticmethod
     def random_block_direction():
         possibilities = [-1, 1]
@@ -63,6 +53,16 @@ class PlatformerBase(object):
     @classmethod
     def change_block_direction(cls, current=None):
         return cls.random_block_direction()
+
+    def _initialize_block_positions(self, already=None):
+        block_positions = already or []
+        x_range = (self._west_edge, self._east_edge)
+        z_range = (self._south_edge, self._north_edge)
+        while len(block_positions) < self._number_of_blocks:
+            pos = (random.randint(*x_range), random.randint(*z_range))
+            if pos not in block_positions:
+                block_positions.append(pos)
+        return block_positions
 
     def _initialize_plane_edges(self):
         padding = 1 + (self._block_size - 1) / 2
@@ -158,9 +158,6 @@ class ParallelPlatformer(PlatformerBase):
         if z_range[0] + 1 > z_range[1]:
             z_range= (z_range[0], z_range[1] - 1)
 
-        print("here...")
-        print(z_range)
-
         # set initial blocks
         z_length = z_range[1] - z_range[0]
         edge_gap = int((self._block_size - 1) / 2)
@@ -170,9 +167,6 @@ class ParallelPlatformer(PlatformerBase):
             if pos not in block_positions:
                 block_positions.append(pos)
             assert len(block_positions) <= self._number_of_blocks, "Not enough blocks"
-        print(block_positions)
-        print((z_range[1] - block_positions[-1][1]))
-        print(edge_gap)
         assert (z_range[1] - block_positions[-1][1]) > edge_gap + 1, "Gap too big at the end"
 
         # set the rest of blocks
