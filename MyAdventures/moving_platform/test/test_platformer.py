@@ -1,7 +1,7 @@
 import unittest
 import random
 
-from platform.moving_platform import Platformer
+from platform.platformer import Platformer
 
 
 class TestPlatformer(unittest.TestCase):

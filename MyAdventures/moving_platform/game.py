@@ -30,7 +30,7 @@ import mcpi.block as block
 import mcpi.minecraftstuff as minecraftstuff
 from mcpi.vec3 import Vec3
 
-from platform.moving_platform import Platformer
+from platform.platformer import Platformer
 from platform.plane import Plane
 
 # level

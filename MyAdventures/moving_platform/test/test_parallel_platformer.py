@@ -1,7 +1,7 @@
 import unittest
 import random
 
-from platform.moving_platform import ParallelPlatformer
+from platform.platformer import ParallelPlatformer
 from platform.plane import Plane
 
 
@@ -9,41 +9,57 @@ class ParallelTestPlatformer(unittest.TestCase):
     def setUp(self):
         random.seed(13)
 
+    def test_calculate_gap_of_value_zero_with_block_size_of_one(self):
+        result = ParallelPlatformer.calculate_gap(number_blocks=12, length=12, block_size=1)
+        self.assertEqual(0, result)
+
+    def test_calculate_gap_of_value_zero_with_block_size_larger_than_one(self):
+        result = ParallelPlatformer.calculate_gap(number_blocks=4, length=12, block_size=3)
+        self.assertEqual(0, result)
+
+    def test_calculate_gap_of_value_one(self):
+        result = ParallelPlatformer.calculate_gap(number_blocks=3, length=13, block_size=3)
+        self.assertEqual(1, result)
+
+    def test_fails_when_calculated_gap_is_not_integer(self):
+        try:
+            result = ParallelPlatformer.calculate_gap(number_blocks=3, length=12, block_size=3)
+            self.assertTrue(False)
+        except AssertionError as e:
+            self.assertEqual(e.message, 'Gap size must be a whole number')
+
+    def test_fails_when_calculated_gap_is_larger_than_maximum_allowed(self):
+        try:
+            result = ParallelPlatformer.calculate_gap(number_blocks=1, length=11, block_size=1)
+            self.assertTrue(False)
+        except AssertionError as e:
+            self.assertEqual(e.message, 'Gap too wide')
+
     def test_default_platform(self):
         result = ParallelPlatformer()
+        self.assertEqual(8, len(result.get_block_positions()))
         self.assertEqual(len(result.get_block_positions()), len(list(set(result.get_block_positions()))))
         self.assertEqual(len(result.get_block_positions()), len(result.get_block_directions()))
 
     def test_basic_custom_platform(self):
-        result = ParallelPlatformer(number_blocks=10)
-        self.assertEqual(10, len(result.get_block_positions()))
+        result = ParallelPlatformer(number_blocks=4, plane=Plane(z=[0, 11]))
+        self.assertEqual(4, len(result.get_block_positions()))
         self.assertEqual(len(result.get_block_positions()), len(list(set(result.get_block_positions()))))
         self.assertEqual(len(result.get_block_positions()), len(result.get_block_directions()))
 
     def test_platform_successfully_created_with_different_number_of_blocks_and_sizes(self):
-        r = ParallelPlatformer(number_blocks=4)
-        print(r.__dict__)
-        r = ParallelPlatformer(number_blocks=3, block_size=3)
-        print(r.__dict__)
+        r = ParallelPlatformer(number_blocks=4, plane=Plane(z=[0, 11]))
+        r = ParallelPlatformer(number_blocks=3, block_size=3, plane=Plane(z=[0, 11]))
         r = ParallelPlatformer(number_blocks=1, block_size=5, plane=Plane([0, 7], [0, 7]))
-        print(r.__dict__)
-
-    def test_platform_requires_more_blocks_raises_error(self):
-        try:
-            r = ParallelPlatformer(number_blocks=2)
-            self.assertTrue(False)
-        except AssertionError as e:
-            self.assertTrue(True)
-            self.assertEqual(e.message, 'Not enough blocks')
 
     def test_platform_leaves_gap_at_the_end_raises_error(self):
         try:
-            r = ParallelPlatformer(number_blocks=1, block_size=5)
+            r = ParallelPlatformer(number_blocks=1, block_size=3, plane=Plane(z=[0, 11]))
             print(r.__dict__)
             self.assertTrue(False)
         except AssertionError as e:
             self.assertTrue(True)
-            self.assertEqual(e.message, 'Gap too big at the end')
+            self.assertEqual(e.message, 'Gap too wide')
 
     def test_platform_requires_odd_block_sizes_raises_error(self):
         try:
@@ -129,17 +145,17 @@ class ParallelTestPlatformer(unittest.TestCase):
             self.assertEqual(len(platform.get_block_positions()), len(list(set(platform.get_block_positions()))))
 
     def test_10_blocks_move_30_iterations_successfully(self):
-        platform = ParallelPlatformer(number_blocks=10)
+        platform = ParallelPlatformer(number_blocks=8)
         for i in range(30):
             platform.move_blocks()
-            self.assertEqual(10, len(platform.get_block_positions()))
+            self.assertEqual(8, len(platform.get_block_positions()))
             self.assertEqual(len(platform.get_block_positions()), len(list(set(platform.get_block_positions()))))
 
     def test_10_blocks_of_bigger_size_move_30_iterations_successfully(self):
-        platform = ParallelPlatformer(number_blocks=10, block_size=3)
+        platform = ParallelPlatformer(number_blocks=2, block_size=5, plane=Plane(z=[0, 12]))
         for i in range(30):
             platform.move_blocks()
-            self.assertEqual(10, len(platform.get_block_positions()))
+            self.assertEqual(2, len(platform.get_block_positions()))
             self.assertEqual(len(platform.get_block_positions()), len(list(set(platform.get_block_positions()))))
 
     def test_a_single_block_of_parallel_platform_moves_correctly_after_hitting_the_wall(self):

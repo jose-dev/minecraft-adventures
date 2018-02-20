@@ -3,18 +3,27 @@ import random
 
 from platform.plane import Plane
 
-NUMBER_BLOCKS = 5
 
+NUMBER_BLOCKS = 5
 
 class PlatformerBase(object):
     def __init__(self, number_blocks=NUMBER_BLOCKS, block_size=1, plane=None, positions=None, directions=None):
-        assert (block_size - 1) % 2 == 0, "Invalid block size"
-        self._block_size = block_size
-        self._number_of_blocks = len(positions) if positions else number_blocks
-        self._plane = plane if plane else Plane()
-        self._initialize_plane_edges()
+        self._set_block_size(block_size)
+        self._set_plane(plane)
+        self._set_number_of_blocks(number_blocks, positions)
         self.set_block_positions(positions or self._initialize_block_positions())
         self.set_block_directions(directions or self._initialize_block_directions())
+
+    def _set_number_of_blocks(self, number_blocks, positions):
+        self._number_of_blocks = len(positions) if positions else number_blocks
+
+    def _set_block_size(self, block_size):
+        assert (block_size - 1) % 2 == 0, "Invalid block size"
+        self._block_size = block_size
+
+    def _set_plane(self, plane):
+        self._plane = plane if plane else Plane()
+        self._initialize_plane_edges()
 
     @staticmethod
     def random_block_direction():
@@ -122,28 +131,50 @@ class StaticPlatformer(PlatformerBase):
 
 
 class ParallelPlatformer(PlatformerBase):
+    MAXIMUM_GAP = 2
+
+    def __init__(self, number_blocks=None, block_size=1, plane=None, positions=None, directions=None):
+        super(ParallelPlatformer, self).__init__(number_blocks=number_blocks, block_size=block_size,
+                                               plane=plane, positions=positions, directions=directions)
+
+    def _set_number_of_blocks(self, number_blocks, positions):
+        number_blocks = len(positions) if positions else number_blocks
+        if not number_blocks:
+            number_blocks = int((self._north_edge - self._south_edge) / self._block_size)
+        self._number_of_blocks = number_blocks
+
+    def _initialize_plane_edges(self):
+        padding = 1 + (self._block_size - 1) / 2
+        self._west_edge  = self._plane.west_edge + padding
+        self._east_edge  = self._plane.east_edge - padding
+        self._south_edge = self._plane.south_edge + 1
+        self._north_edge = self._plane.north_edge - 1
+
     def _initialize_block_positions(self):
         block_positions = []
         x_range = (self._west_edge, self._east_edge)
         z_range = (self._south_edge, self._north_edge)
-        if z_range[0] + 1 > z_range[1]:
-            z_range= (z_range[0] + 1, z_range[1])
-        if z_range[0] + 1 > z_range[1]:
-            z_range= (z_range[0], z_range[1] - 1)
+
+        gap = ParallelPlatformer.calculate_gap(number_blocks=self._number_of_blocks,
+                                               length=(z_range[1] - z_range[0]),
+                                               block_size=self._block_size)
 
         # set initial blocks
-        z_length = z_range[1] - z_range[0]
-        edge_gap = int((self._block_size - 1) / 2)
-        jump = self._block_size + 1
-        for z in range(z_range[0], z_range[1], jump):
+        jump = self._block_size + gap
+        for z in range(z_range[0] + gap, z_range[1], jump):
             pos = (random.randint(*x_range), z)
             if pos not in block_positions:
                 block_positions.append(pos)
-            assert len(block_positions) <= self._number_of_blocks, "Not enough blocks"
-        assert (z_range[1] - block_positions[-1][1]) > edge_gap + 1, "Gap too big at the end"
 
         # set the rest of blocks
         return super(ParallelPlatformer, self)._initialize_block_positions(block_positions)
+
+    @classmethod
+    def calculate_gap(cls, number_blocks=None, length=None, block_size=None):
+        gap = (length - (number_blocks * block_size)) / float(number_blocks + 1)
+        assert gap == int(gap), "Gap size must be a whole number"
+        assert gap <= cls.MAXIMUM_GAP, "Gap too wide"
+        return int(gap)
 
     @classmethod
     def change_block_direction(cls, current=None):
